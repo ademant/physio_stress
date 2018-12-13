@@ -31,7 +31,7 @@ end
 
 if minetest.get_modpath("3d_armor") ~= nil then
 
-	for _,tool in ipairs({"helmet","chestplate","leggings","boots","shield"}) do
+	for _,tool in ipairs({"helmet","chestplate","leggings","boots"}) do
 		minetest.register_craft({
 			output=physio_stress.modname..":"..tool.."_grass",
 			recipe=local_get_recipe(tool,"default:grass_1")
@@ -50,8 +50,6 @@ if minetest.get_modpath("3d_armor") ~= nil then
 			tt_def.groups.armor_legs=1
 		elseif tool == "boots" then
 			tt_def.groups.armor_feet=1
-		elseif tool == "shields" then
-			tt_def.groups.armor_shield=1
 		end
 		toolname=physio_stress.modname..":"..tool.."_grass"
 		armor:register_armor(toolname,tt_def)
