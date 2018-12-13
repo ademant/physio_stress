@@ -3,3 +3,4 @@ physio_stress.hunger (Enables hunger) bool true
 physio_stress.thirst (Enables thirst) bool true
 physio_stress.sunburn (Enables sunburn) bool true
 physio_stress.nyctophoby (Enables angst before darkness) bool true
+physio_stress.prefix (Physio prefix for metadata) string "physio"
