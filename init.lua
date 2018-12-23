@@ -9,6 +9,8 @@ physio_stress.player={}
 minetest.log("action", "[MOD]"..minetest.get_current_modname().." -- start loading from "..minetest.get_modpath(minetest.get_current_modname()))
 -- Load files
 
+-- import settingtypes.txt
+basic_functions.import_settingtype(physio_stress.path .. "/settingtypes.txt")
 
 dofile(physio_stress.path .. "/api.lua") -- API
 dofile(physio_stress.path .. "/config.lua") -- API
