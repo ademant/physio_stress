@@ -11,6 +11,7 @@ minetest.register_on_joinplayer(function(player)
 			end
 		end
 	end
+	physio_stress.hud_init(player)
 end)
 
 function physio_stress.hud_clamp(value)
@@ -22,26 +23,17 @@ function physio_stress.hud_clamp(value)
         return math.ceil(value)
     end
 end
-
-if minetest.get_modpath("hud") then
-    local position = { x=0.5, y=1 }
-    local offset   = { x=15, y=-133} -- above AIR
-    hud.register('exhaustion', {
-        hud_elem_type = "statbar",
-        position = position,
-        text = "physio_stress_exhaust.png",
---        background = "sunburn_sun_bg.png",
-        number = 20,
-        max = 20,
-        size = HUD_SD_SIZE, -- by default { x=24, y=24 },
-        offset = offset,
-    })
+if minetest.get_modpath("hudbars") then
+    hb.register_hudbar('exhaust', 0xffffff, "Exhaustion", {
+        bar = 'physio_stress_hudbars_bar.png',
+        icon = 'physio_stress_exhaust_16.png'
+    }, 20, 20, false)
     function physio_stress.hud_init(player)
-        -- automatic by [hud]
+        hb.init_hudbar(player, 'exhaust',
+            physio_stress.hud_clamp(xpfw.player_get_attribute(player, 'exhaustion')),
+        20, false)
     end
     function physio_stress.hud_update(player, value)
-        hud.change_item(player, 'exhaustion', {
-            number = physio_stress.hud_clamp(value)
-        })
+        hb.change_hudbar(player, 'exhaust', physio_stress.hud_clamp(value), 20)
     end
 end
