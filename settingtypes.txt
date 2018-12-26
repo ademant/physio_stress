@@ -11,3 +11,5 @@ physio_stress.subnurn_hp (Sunburn health points damage) float 1
 physio_stress.nyctophoby_diff (Nyctophoby threshold for damage) int 3 1 14
 physio_stress.nyctophoby_armor (Nyctophoby armor protection) float 0.5 
 physio_stress.nyctophoby_hp (Nyctophoby health points damage) float 1 
+physio_stress.hunger_max (Enables hunger) int 30 10 50
+physio_stress.thirst_max (Enables thirst) int 30 10 50

@@ -10,6 +10,8 @@ minetest.register_on_joinplayer(function(player)
 				ps[attr]=minetest.settings:get("physio_stress."..attr) or 1
 			end
 		end
+		ps.saturation=20
+		ps.thirst=20
 	end
 	physio_stress.hud_init(player)
 end)

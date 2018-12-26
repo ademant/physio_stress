@@ -12,13 +12,12 @@ minetest.register_globalstep(function(dtime)
 			local player_armor=armor.def[name].count
 			if physio_stress.attributes.sunburn and act_light then
 				local player_meanlight=xpfw.player_get_attribute(player,"meanlight")
---				print("sunburn: "..(act_light-player_meanlight))
-				if ((act_light-player_meanlight)>ps.sunburn_diff) then
-					local diff_hp=ps.sunburn_hp
-					if player_armor>0 then
-						diff_hp=diff_hp*ps.sunburn_armor
-					end
-					player:set_hp( player:get_hp() - diff_hp )
+				local sudiff=ps.sunburn_diff
+				if player_armor>0 then
+					sudiff=sudiff/ps.sunburn_armor
+				end
+				if ((act_light-player_meanlight)>sudiff) then
+					player:set_hp( player:get_hp() - ps.sunburn_hp )
 				end
 			end
 			if physio_stress.attributes.nyctophoby and act_light then
@@ -40,13 +39,12 @@ minetest.register_globalstep(function(dtime)
 				if node ~= nil then
 					local player_meanlight=xpfw.player_get_attribute(player,"meanlight")
 					print("nycto: "..(player_meanlight-act_light))
-					if ((player_meanlight-act_light)>ps.nyctophoby_diff) then
-						local diff_hp=ps.nyctophoby_hp
-						if player_armor>0 then
-							diff_hp=diff_hp*ps.nyctophoby_armor
-						end
-						player:set_hp( player:get_hp() - diff_hp )
---						player:set_hp( player:get_hp() - ps.nyctophoby_hp )
+					local nydiff=ps.nyctophoby_diff
+					if player_armor>0 then
+						nydiff=nydiff/ps.nyctophoby_armor
+					end
+					if ((player_meanlight-act_light)>nydiff) then
+						player:set_hp( player:get_hp() - ps.nyctophoby_hp )
 					end
 				end
 			end
