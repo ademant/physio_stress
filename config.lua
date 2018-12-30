@@ -15,3 +15,9 @@ physio_stress.default_player={}
 for i,attr in ipairs({"sunburn_diff","nyctophoby_diff","sunburn_hp","nyctophoby_hp","sunburn_armor","nyctophoby_armor"}) do
 	physio_stress.default_player[attr]=tonumber(minetest.settings:get("physio_stress."..attr)) or 1
 end
+
+xpfw.register_attribute("exhaustion",{min=0,max=20,
+	recreation_factor=(tonumber(minetest.settings:get("physio_stress.exhaust_recreation")) or 30),
+	default=0,
+	hud=1
+	})

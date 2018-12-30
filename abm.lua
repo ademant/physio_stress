@@ -54,10 +54,9 @@ minetest.register_globalstep(function(dtime)
 							xpfw.player_get_attribute(player,"mean_dig_speed"),
 							xpfw.player_get_attribute(player,"mean_build_speed") )
 				print("exhaust "..exh)
-				print(xpfw.player_get_attribute(player,"mean_swam_speed"),
-							xpfw.player_get_attribute(player,"mean_walked_speed"),
-							xpfw.player_get_attribute(player,"mean_dig_speed"),
-							xpfw.player_get_attribute(player,"mean_build_speed"))
+				if (exh > xpfw.player_get_attribute(player,"exhaustion")) then
+					xpfw.player_get_attribute(player,"exhaustion",exh)
+				end
 				physio_stress.hud_update(player,exh)
 			end
 		end
