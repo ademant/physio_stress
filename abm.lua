@@ -12,6 +12,7 @@ minetest.register_globalstep(function(dtime)
 			local player_armor=armor.def[name].count
 			if physio_stress.attributes.sunburn and act_light then
 				local player_meanlight=xpfw.player_get_attribute(player,"meanlight")
+				print(player_meanlight)
 				local sudiff=ps.sunburn_diff
 				if player_armor>0 then
 					sudiff=sudiff/ps.sunburn_armor
@@ -53,7 +54,7 @@ minetest.register_globalstep(function(dtime)
 							xpfw.player_get_attribute(player,"mean_walked_speed"),
 							xpfw.player_get_attribute(player,"mean_dig_speed"),
 							xpfw.player_get_attribute(player,"mean_build_speed") )
-				print("exhaust "..exh)
+--				print("exhaust "..exh)
 				if (exh > xpfw.player_get_attribute(player,"exhaustion")) then
 					xpfw.player_get_attribute(player,"exhaustion",exh)
 				end

@@ -1,6 +1,6 @@
 physio_stress.dtime (Time diff when to execute the abm) float 1 
 physio_stress.exhaustion (Enables exhaustion) bool true
-physio_stress.hunger (Enables hunger) bool true
+physio_stress.saturation (Enables hunger) bool true
 physio_stress.thirst (Enables thirst) bool true
 physio_stress.sunburn (Enables sunburn) bool true
 physio_stress.nyctophoby (Enables angst before darkness) bool true
@@ -11,6 +11,7 @@ physio_stress.subnurn_hp (Sunburn health points damage) float 1
 physio_stress.nyctophoby_diff (Nyctophoby threshold for damage) int 3 1 14
 physio_stress.nyctophoby_armor (Nyctophoby armor protection) float 0.5 
 physio_stress.nyctophoby_hp (Nyctophoby health points damage) float 1 
-physio_stress.hunger_max (Enables hunger) int 30 10 50
-physio_stress.thirst_max (Enables thirst) int 30 10 50
+physio_stress.saturation_max (Max. saturation value) int 30 10 50
+physio_stress.thirst_max (Max. thirst value) int 30 10 50
 physio_stress.exhaust_recreation (Recreation of exhaustion) int 30 10 500
+physio_stress.saturation_recreation (Time to heal with saturation) int 1 1 5
