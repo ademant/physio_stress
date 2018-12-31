@@ -4,9 +4,10 @@ end
 
 physio_stress.dtime=tonumber(minetest.settings:get("physio_stress.dtime")) or 1
 physio_stress.dt=0
+physio_stress.st=0
 physio_stress.saturationmax=tonumber(minetest.settings:get("physio_stress.saturation_max")) or 30
 physio_stress.thirstmax=tonumber(minetest.settings:get("physio_stress.thirst_max")) or 30
-physio_stress.saturation_recreation=tonumber(minetest.settings:get("physio_stress.saturation_recreation")) or 1
+physio_stress.saturation_recreation=tonumber(minetest.settings:get("physio_stress.saturation_recreation")) or 0.5
 
 if minetest.get_modpath("3d_armor") == nil then
 	physio_stress.attributes.sunburn = false

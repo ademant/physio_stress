@@ -31,9 +31,8 @@ if minetest.get_modpath("hudbars") then
         icon = 'physio_stress_exhaust_16.png'
     }, 20, 20, false)
     function physio_stress.hud_init(player)
-        hb.init_hudbar(player, 'exhaust',
-            physio_stress.hud_clamp(xpfw.player_get_attribute(player, 'exhaustion')),
-        20, false)
+        hb.init_hudbar(player, 'exhaust',physio_stress.hud_clamp(xpfw.player_get_attribute(player, 'exhaustion')),
+			20, false)
     end
     function physio_stress.hud_update(player, value)
         hb.change_hudbar(player, 'exhaust', physio_stress.hud_clamp(value), 20)

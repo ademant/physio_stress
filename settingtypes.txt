@@ -14,4 +14,4 @@ physio_stress.nyctophoby_hp (Nyctophoby health points damage) float 1
 physio_stress.saturation_max (Max. saturation value) int 30 10 50
 physio_stress.thirst_max (Max. thirst value) int 30 10 50
 physio_stress.exhaust_recreation (Recreation of exhaustion) int 30 10 500
-physio_stress.saturation_recreation (Time to heal with saturation) int 1 1 5
+physio_stress.saturation_recreation (Heal by saturation per dtime) float 1

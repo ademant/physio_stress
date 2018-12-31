@@ -10,9 +10,12 @@ minetest.register_globalstep(function(dtime)
 			local act_pos=player:get_pos()
 			local act_light=minetest.get_node_light(act_pos)
 			local player_armor=armor.def[name].count
+			local act_node=minetest.get_node(act_pos)
+			
+			-- sunburn
 			if physio_stress.attributes.sunburn and act_light then
 				local player_meanlight=xpfw.player_get_attribute(player,"meanlight")
-				print(player_meanlight)
+--				print(player_meanlight)
 				local sudiff=ps.sunburn_diff
 				if player_armor>0 then
 					sudiff=sudiff/ps.sunburn_armor
@@ -21,6 +24,8 @@ minetest.register_globalstep(function(dtime)
 					player:set_hp( player:get_hp() - ps.sunburn_hp )
 				end
 			end
+			
+			-- nyctophoby
 			if physio_stress.attributes.nyctophoby and act_light then
 				local node=minetest.get_node(act_pos)
 				if node.name == "water" then
@@ -39,7 +44,7 @@ minetest.register_globalstep(function(dtime)
 				end
 				if node ~= nil then
 					local player_meanlight=xpfw.player_get_attribute(player,"meanlight")
-					print("nycto: "..(player_meanlight-act_light))
+--					print("nycto: "..(player_meanlight-act_light))
 					local nydiff=ps.nyctophoby_diff
 					if player_armor>0 then
 						nydiff=nydiff/ps.nyctophoby_armor
@@ -49,6 +54,8 @@ minetest.register_globalstep(function(dtime)
 					end
 				end
 			end
+			
+			-- exhaustion
 			if physio_stress.attributes.exhaustion then
 				local exh=math.max(xpfw.player_get_attribute(player,"mean_swam_speed"),
 							xpfw.player_get_attribute(player,"mean_walked_speed"),
@@ -59,6 +66,22 @@ minetest.register_globalstep(function(dtime)
 					xpfw.player_get_attribute(player,"exhaustion",exh)
 				end
 				physio_stress.hud_update(player,exh)
+			end
+			
+			-- heal by saturation
+			local hp=player:get_hp()
+			local sat=tonumber(xpfw.player_get_attribute(player,"saturation"))
+			if hp<20 and sat>hp then
+				xpfw.player_sub_attribute(player,"saturation",2*physio_stress.saturation_recreation)
+				hp=hp+physio_stress.saturation_recreation
+				player:set_hp(hp)
+			end
+			
+			-- thirst recreation in water
+			if minetest.get_item_group(act_node.name,"water")>0 then
+				if xpfw.player_get_attribute(player,"thirst")<physio_stress.thirstmax then
+					xpfw.player_add_attribute(player,"thirst",2)
+				end
 			end
 		end
 	end
