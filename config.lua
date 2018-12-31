@@ -20,7 +20,6 @@ end
 
 if minetest.settings:get("physio_stress.exhaustion") then
 	xpfw.register_attribute("exhaustion",{min=0,max=20,
-		recreation_factor=(tonumber(minetest.settings:get("physio_stress.exhaust_recreation")) or 30),
 		default=0,
 		hud=1
 		})

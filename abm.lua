@@ -57,13 +57,15 @@ minetest.register_globalstep(function(dtime)
 			
 			-- exhaustion
 			if physio_stress.attributes.exhaustion then
+				-- get max of speeds
 				local exh=math.max(xpfw.player_get_attribute(player,"mean_swam_speed"),
 							xpfw.player_get_attribute(player,"mean_walked_speed"),
 							xpfw.player_get_attribute(player,"mean_dig_speed"),
 							xpfw.player_get_attribute(player,"mean_build_speed") )
 --				print("exhaust "..exh)
+				-- if one speed excel actual exhaustion level than set to max.
 				if (exh > xpfw.player_get_attribute(player,"exhaustion")) then
-					xpfw.player_get_attribute(player,"exhaustion",exh)
+					xpfw.player_set_attribute(player,"exhaustion",exh)
 				else
 					local act_exh=xpfw.player_get_attribute(player,"exhaustion")
 					local act_sat=xpfw.player_get_attribute(player,"saturation")
