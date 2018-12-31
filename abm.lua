@@ -64,10 +64,30 @@ minetest.register_globalstep(function(dtime)
 --				print("exhaust "..exh)
 				if (exh > xpfw.player_get_attribute(player,"exhaustion")) then
 					xpfw.player_get_attribute(player,"exhaustion",exh)
+				else
+					local act_exh=xpfw.player_get_attribute(player,"exhaustion")
+					local act_sat=xpfw.player_get_attribute(player,"saturation")
+					local act_hp = player:get_hp()
+					if act_sat > 1 then
+						if act_sat > 5 then
+							act_sat = act_sat - 1
+							act_exh = act_exh - 1
+							xpfw.player_sub_attribute(player,"saturation",0.5)
+							xpfw.player_sub_attribute(player,"exhaustion",1.5)
+						else
+							xpfw.player_sub_attribute(player,"exhaustion",1)
+						end
+					else
+						act_hp = act_hp - 1
+						act_exh = act_exh - 1
+						xpfw.player_sub_attribute(player,"exhaustion",1.5)
+						player:set_hp(act_hp)
+					end
 				end
 				physio_stress.hud_update(player,exh)
 			end
 			
+			-- 
 			-- heal by saturation
 			local hp=player:get_hp()
 			local sat=tonumber(xpfw.player_get_attribute(player,"saturation"))

@@ -13,6 +13,12 @@ minetest.register_on_joinplayer(function(player)
 		ps.saturation=20
 		ps.thirst=20
 	end
+	local ps=physio_stress.player[playername]
+	
+	ps.dug=xpfw.player_get_attribute(player,"dug")
+	ps.build=xpfw.player_get_attribute(player,"build")
+	ps.walked=xpfw.player_get_attribute(player,"walked")
+	ps.swam=xpfw.player_get_attribute(player,"swam")
 	physio_stress.hud_init(player)
 end)
 
