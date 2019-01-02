@@ -71,54 +71,48 @@ minetest.register_globalstep(function(dtime)
 				elseif act_sat > 0 then
 					xpfw.player_sub_attribute(player,"exhaustion",1)
 				end
-				physio_stress.hud_update(player,exh)
+				physio_stress.hud_update(player,"exhaustion",xpfw.player_get_attribute(player,"exhaustion"))
 			end
 			
-			-- saturation
-			local walked=xpfw.player_get_attribute(player,"walked")
-			local dug=xpfw.player_get_attribute(player,"dug")
-			local swam=xpfw.player_get_attribute(player,"swam")
-			local build=xpfw.player_get_attribute(player,"build")
+			-- saturation/thirst
 			
-			local dwalk=math.max(0,walked-ps.walked)
-			local ddug=math.max(0,dug-ps.dug)
-			local dswam=math.max(0,swam-ps.swam)
-			local dbuild=math.max(0,build-ps.build)
-			
-			local dsat=math.floor(dwalk/100+ddug/10+dswam/75+dbuild/10)
-			if xpfw.player_get_attribute(player,"saturation")>dsat then
-				xpfw.player_sub_attribute(player,"saturation",dsat)
-			else
-				local hp=player:get_hp()-0.5
-				player:set_hp(hp)
-			end
-			
-			-- thirst
-			local dthirst=math.floor(dwalk/50+ddug/8+dswam/500+dbuild/8)
-			if xpfw.player_get_attribute(player,"thirst")>dthirst then
-				xpfw.player_sub_attribute(player,"thirst",dthirst)
-			else
-				local hp=player:get_hp()-0.5
-				player:set_hp(hp)
+			for j,st in ipairs({"saturation","thirst"}) do -- call for saturation/thirst similar calls
+				local dsat=0
+				-- for each coefficient (walked, swam, dug, build, base consumption) the sum of saturation/thirst consumption is added
+				for i,attr in ipairs(physio_stress.st_coeff_names) do
+					local dref=ps[st.."_"..attr]
+					if dref==nil then
+						dref=physio_stress.default_player[st.."_"..attr]
+					end
+					if dref==nil then dref=1 end
+					dsat=dsat+math.max(0,(xpfw.player_get_attribute(player,attr)-ps[attr])/(dref))
+				end
+				-- if player has enough saturation/thirst, this is reduced
+				if xpfw.player_get_attribute(player,st)>dsat then
+					xpfw.player_sub_attribute(player,st,dsat)
+					physio_stress.hud_update(player,st,xpfw.player_get_attribute(player,st))
+
+				else
+				-- otherwise hitpoints are reduced
+					local hp=player:get_hp()-0.5
+					player:set_hp(hp)
+				end
 			end
 			
-			if math.floor(dwalk/50)>0 then
-				ps.walked=walked
+			-- actuall stats are copied
+			for i,attr in ipairs(physio_stress.st_coeff_names) do
+				local patt=xpfw.player_get_attribute(player,attr)
+				if patt ~= nil then
+					ps[attr]=patt
+				end
 			end
-			if math.floor(ddug/5)>0 then
-				ps.dug=dug
-			end
-			if math.floor(dswam/100)>0 then
-				ps.swam=swam
-			end
-			if math.floor(dbuild/5)>0 then
-				ps.build=build
-			end
+			
 			-- heal by saturation
 			local hp=player:get_hp()
 			local sat=tonumber(xpfw.player_get_attribute(player,"saturation"))
 			if hp<20 and sat>hp then
 				xpfw.player_sub_attribute(player,"saturation",2*physio_stress.saturation_recreation)
+				physio_stress.hud_update(player,"saturation",xpfw.player_get_attribute(player,"saturation"))
 				hp=hp+physio_stress.saturation_recreation
 				player:set_hp(hp)
 			end
@@ -127,6 +121,7 @@ minetest.register_globalstep(function(dtime)
 			if minetest.get_item_group(act_node.name,"water")>0 then
 				if xpfw.player_get_attribute(player,"thirst")<physio_stress.thirstmax then
 					xpfw.player_add_attribute(player,"thirst",2)
+					physio_stress.hud_update(player,"thirst",xpfw.player_get_attribute(player,"thirst"))
 				end
 			end
 		end
