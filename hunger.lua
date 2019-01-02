@@ -56,6 +56,7 @@ function physio_stress.item_eat(hunger_change, replace_with_item, heal, thirst_c
 			-- Saturation
 			if hunger_change then
 				if hunger_change > 0 then
+					print("eat "..hunger_change)
 					xpfw.player_add_attribute(user,"saturation",hunger_change)
 				end
 			end

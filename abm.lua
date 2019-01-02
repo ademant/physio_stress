@@ -63,33 +63,57 @@ minetest.register_globalstep(function(dtime)
 							xpfw.player_get_attribute(player,"mean_dig_speed"),
 							xpfw.player_get_attribute(player,"mean_build_speed") )
 --				print("exhaust "..exh)
+				local act_exh=xpfw.player_get_attribute(player,"exhaustion")
+				local act_sat=xpfw.player_get_attribute(player,"saturation")
 				-- if one speed excel actual exhaustion level than set to max.
-				if (exh > xpfw.player_get_attribute(player,"exhaustion")) then
+				if (exh > act_exh) then
 					xpfw.player_set_attribute(player,"exhaustion",exh)
-				else
-					local act_exh=xpfw.player_get_attribute(player,"exhaustion")
-					local act_sat=xpfw.player_get_attribute(player,"saturation")
-					local act_hp = player:get_hp()
-					if act_sat > 1 then
-						if act_sat > 5 then
-							act_sat = act_sat - 1
-							act_exh = act_exh - 1
-							xpfw.player_sub_attribute(player,"saturation",0.5)
-							xpfw.player_sub_attribute(player,"exhaustion",1.5)
-						else
-							xpfw.player_sub_attribute(player,"exhaustion",1)
-						end
-					else
-						act_hp = act_hp - 1
-						act_exh = act_exh - 1
-						xpfw.player_sub_attribute(player,"exhaustion",1.5)
-						player:set_hp(act_hp)
-					end
+				elseif act_sat > 0 then
+					xpfw.player_sub_attribute(player,"exhaustion",1)
 				end
 				physio_stress.hud_update(player,exh)
 			end
 			
-			-- 
+			-- saturation
+			local walked=xpfw.player_get_attribute(player,"walked")
+			local dug=xpfw.player_get_attribute(player,"dug")
+			local swam=xpfw.player_get_attribute(player,"swam")
+			local build=xpfw.player_get_attribute(player,"build")
+			
+			local dwalk=math.max(0,walked-ps.walked)
+			local ddug=math.max(0,dug-ps.dug)
+			local dswam=math.max(0,swam-ps.swam)
+			local dbuild=math.max(0,build-ps.build)
+			
+			local dsat=math.floor(dwalk/100+ddug/10+dswam/75+dbuild/10)
+			if xpfw.player_get_attribute(player,"saturation")>dsat then
+				xpfw.player_sub_attribute(player,"saturation",dsat)
+			else
+				local hp=player:get_hp()-0.5
+				player:set_hp(hp)
+			end
+			
+			-- thirst
+			local dthirst=math.floor(dwalk/50+ddug/8+dswam/500+dbuild/8)
+			if xpfw.player_get_attribute(player,"thirst")>dthirst then
+				xpfw.player_sub_attribute(player,"thirst",dthirst)
+			else
+				local hp=player:get_hp()-0.5
+				player:set_hp(hp)
+			end
+			
+			if math.floor(dwalk/50)>0 then
+				ps.walked=walked
+			end
+			if math.floor(ddug/5)>0 then
+				ps.dug=dug
+			end
+			if math.floor(dswam/100)>0 then
+				ps.swam=swam
+			end
+			if math.floor(dbuild/5)>0 then
+				ps.build=build
+			end
 			-- heal by saturation
 			local hp=player:get_hp()
 			local sat=tonumber(xpfw.player_get_attribute(player,"saturation"))
