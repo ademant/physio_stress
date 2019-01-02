@@ -61,6 +61,7 @@ minetest.register_globalstep(function(dtime)
 				local exh=math.max(xpfw.player_get_attribute(player,"mean_swam_speed"),
 							xpfw.player_get_attribute(player,"mean_walked_speed"),
 							xpfw.player_get_attribute(player,"mean_dig_speed"),
+							xpfw.player_get_attribute(player,"mean_craft_speed"),
 							xpfw.player_get_attribute(player,"mean_build_speed") )
 --				print("exhaust "..exh)
 				local act_exh=xpfw.player_get_attribute(player,"exhaustion")

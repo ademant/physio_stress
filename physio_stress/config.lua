@@ -8,7 +8,7 @@ physio_stress.saturationmax=tonumber(minetest.settings:get("physio_stress.satura
 physio_stress.thirstmax=tonumber(minetest.settings:get("physio_stress.thirst_max")) or 20
 physio_stress.saturation_recreation=tonumber(minetest.settings:get("physio_stress.saturation_recreation")) or 0.5
 physio_stress.player={}
-physio_stress.st_coeff_names={"walked","swam","dug","build","base"}
+physio_stress.st_coeff_names={"walked","swam","dug","build","base","craft"}
 
 for i,attr in ipairs({"playerlist"}) do
 	physio_stress[attr]=physio_stress.mod_storage:get_string(attr)
