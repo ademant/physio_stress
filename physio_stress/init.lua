@@ -14,10 +14,11 @@ basic_functions.import_settingtype(physio_stress.path .. "/settingtypes.txt")
 
 dofile(physio_stress.path .. "/api.lua") -- API
 dofile(physio_stress.path .. "/config.lua") -- API
-dofile(physio_stress.path .. "/farming.lua") -- Farming update
 --dofile(physio_stress.path .. "/chat_commands.lua")
 dofile(physio_stress.path .. "/armor.lua")
 dofile(physio_stress.path .. "/hunger.lua")
+dofile(physio_stress.path .. "/register.lua") -- API
 dofile(physio_stress.path .. "/abm.lua") -- API
+dofile(physio_stress.path .. "/interop.lua") -- API
 
 minetest.log("action", "[MOD]"..minetest.get_current_modname().." -- loaded ")
