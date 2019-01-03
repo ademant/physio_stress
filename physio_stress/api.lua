@@ -85,7 +85,8 @@ function physio_stress.player_save(playername)
 	end
 	local def=physio_stress.player[playername]
 	for attr,val in pairs(def) do
-		if val ~= physio_stress.default_player[attr] then
+		if val ~= physio_stress.default_player[attr] and type(val) == "number" then
+--			print(attr,val)
 			physio_stress.mod_storage:set_float(playername.."_"..attr,val)
 		else
 	--		print(attr.." not changed")

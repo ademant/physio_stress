@@ -28,7 +28,8 @@ minetest.register_globalstep(function(dtime)
 			if ps.sunburn_protect then
 				ps.sunburn_delay=ps.sunburn_delay - dtime
 				if ps.sunburn_delay < 0 then
-				ps.sunburn_protect = false
+					ps.sunburn_protect = false
+				end
 			end
 			
 			-- nyctophoby
@@ -64,7 +65,8 @@ minetest.register_globalstep(function(dtime)
 			if ps.nyctophoby_protect then
 				ps.nyctophoby_delay=ps.nyctophoby_delay - dtime
 				if ps.nyctophoby_delay < 0 then
-				ps.nyctophoby_protect = false
+					ps.nyctophoby_protect = false
+				end
 			end
 			
 			-- exhaustion
@@ -83,6 +85,9 @@ minetest.register_globalstep(function(dtime)
 					xpfw.player_set_attribute(player,"exhaustion",exh)
 				elseif act_sat > 0 then
 					xpfw.player_sub_attribute(player,"exhaustion",1)
+				end
+				if exh > 18 then
+					local ret = playereffects.apply_effect_type("exhausted", 60, player)
 				end
 				physio_stress.hud_update(player,"exhaustion",xpfw.player_get_attribute(player,"exhaustion"))
 			end

@@ -8,6 +8,8 @@ physio_stress.saturationmax=tonumber(minetest.settings:get("physio_stress.satura
 physio_stress.thirstmax=tonumber(minetest.settings:get("physio_stress.thirst_max")) or 20
 physio_stress.saturation_recreation=tonumber(minetest.settings:get("physio_stress.saturation_recreation")) or 0.5
 physio_stress.player={}
+physio_stress.exhausted_build={}
+physio_stress.exhausted_dig={}
 physio_stress.st_coeff_names={"walked","swam","dug","build","base","craft"}
 physio_stress.dig_groups={"cracky","crumbly","snappy","choppy"}
 
@@ -44,7 +46,7 @@ if physio_stress.playerlist ~= "" then
 		for j,attr in pairs(physio_stress.player[pl]) do
 			local modval=physio_stress.mod_storage:get(pl.."_"..j)
 			if modval ~= nil then
-				physio_stress.player[pl]=tonumber(modval)
+				physio_stress.player[pl][attr]=tonumber(modval)
 			end
 		end
 	end

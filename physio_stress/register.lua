@@ -35,6 +35,7 @@ minetest.register_on_joinplayer(function(player)
 		physio_stress.player[playername]=table.copy(physio_stress.default_player)
 	else
 		local ps=physio_stress.player[playername]
+		print(dump2(ps))
 		for i,attr in ipairs({"sunburn_diff","nyctophoby_diff","sunburn_hp","nyctophoby_hp","sunburn_armor","nyctophoby_armor"}) do
 			if ps[attr] == nil then
 				ps[attr]=minetest.settings:get("physio_stress."..attr) or 1

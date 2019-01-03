@@ -20,5 +20,7 @@ dofile(physio_stress.path .. "/hunger.lua")
 dofile(physio_stress.path .. "/register.lua") -- API
 dofile(physio_stress.path .. "/abm.lua") -- API
 dofile(physio_stress.path .. "/interop.lua") -- API
+dofile(physio_stress.path .. "/playereffects.lua") -- API
+dofile(physio_stress.path .. "/overrides.lua") -- overriding base functions
 
 minetest.log("action", "[MOD]"..minetest.get_current_modname().." -- loaded ")
