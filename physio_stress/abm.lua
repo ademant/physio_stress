@@ -13,7 +13,7 @@ minetest.register_globalstep(function(dtime)
 			local act_node=minetest.get_node(act_pos)
 			
 			-- sunburn
-			if physio_stress.attributes.sunburn and act_light then
+			if physio_stress.attributes.sunburn and act_light and not ps.sunburn_protect then
 				local player_meanlight=xpfw.player_get_attribute(player,"meanlight")
 --				print(player_meanlight)
 				local sudiff=ps.sunburn_diff
@@ -24,9 +24,15 @@ minetest.register_globalstep(function(dtime)
 					player:set_hp( player:get_hp() - ps.sunburn_hp )
 				end
 			end
+			-- count down then sunburn protection;
+			if ps.sunburn_protect then
+				ps.sunburn_delay=ps.sunburn_delay - dtime
+				if ps.sunburn_delay < 0 then
+				ps.sunburn_protect = false
+			end
 			
 			-- nyctophoby
-			if physio_stress.attributes.nyctophoby and act_light then
+			if physio_stress.attributes.nyctophoby and act_light and not ps.nyctophoby_protect then
 				local node=minetest.get_node(act_pos)
 				if node.name == "water" then
 					local bair=true
@@ -53,6 +59,12 @@ minetest.register_globalstep(function(dtime)
 						player:set_hp( player:get_hp() - ps.nyctophoby_hp )
 					end
 				end
+			end
+			-- count down then nyctophoby protection;
+			if ps.nyctophoby_protect then
+				ps.nyctophoby_delay=ps.nyctophoby_delay - dtime
+				if ps.nyctophoby_delay < 0 then
+				ps.nyctophoby_protect = false
 			end
 			
 			-- exhaustion
@@ -88,6 +100,16 @@ minetest.register_globalstep(function(dtime)
 					if dref==nil then dref=1 end
 					dsat=dsat+math.max(0,(xpfw.player_get_attribute(player,attr)-ps[attr])/(dref))
 				end
+				
+				-- small corrections due to hardness of dug nodes (by group stage): harder stones need more energy
+				local dref=ps[st.."_dug"]
+				if dref==nil then
+					dref=physio_stress.default_player[st.."_dug"]
+				end
+				for i,attr in ipairs(physio_stress.dig_groups) do
+					local correction=physio_stress.dig_correction[attr] or 1
+					dsat=dsat+math.max(0,(ps[attr]*correction)/(3*dref))
+				end
 				-- if player has enough saturation/thirst, this is reduced
 				if xpfw.player_get_attribute(player,st)>dsat then
 					xpfw.player_sub_attribute(player,st,dsat)
@@ -106,6 +128,10 @@ minetest.register_globalstep(function(dtime)
 				if patt ~= nil then
 					ps[attr]=patt
 				end
+			end
+			-- dig groups are resetted
+			for i,attr in ipairs(physio_stress.dig_groups) do
+				ps[attr]=0
 			end
 			
 			-- heal by saturation

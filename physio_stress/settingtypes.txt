@@ -5,9 +5,11 @@ physio_stress.thirst (Enables thirst) bool true
 physio_stress.sunburn (Enables sunburn) bool true
 physio_stress.nyctophoby (Enables angst before darkness) bool true
 physio_stress.prefix (Physio prefix for metadata) string "physio"
+physio_stress.sunburn_delay (Sunburn delay for start hurting) int 10 1 1000
 physio_stress.sunburn_diff (Sunburn threshold for damage) int 4 1 14
 physio_stress.sunburn_armor (Sunburn armor protection) float 0.5
 physio_stress.subnurn_hp (Sunburn health points damage) float 0.5 
+physio_stress.nyctophyby_delay (Nyctophoby delay for start hurting) int 10 1 1000
 physio_stress.nyctophoby_diff (Nyctophoby threshold for damage) int 5 1 14
 physio_stress.nyctophoby_armor (Nyctophoby armor protection) float 0.5 
 physio_stress.nyctophoby_hp (Nyctophoby health points damage) float 0.5 
@@ -17,12 +19,16 @@ physio_stress.saturation_recreation (Heal by saturation per dtime) float 1
 physio_stress.saturation_base (Base consumption of eating per time) int 1500 100 3600
 physio_stress.saturation_walked (One Consumption per walked distance) int 150 10 3600
 physio_stress.saturation_swam (One Consumption per swam distance) int 130 10 3600
-physio_stress.saturation_dug (One Consumption per dug blocks) int 15 5 3600
+physio_stress.saturation_dug (One Consumption per dug blocks) int 30 5 3600
 physio_stress.saturation_build (One Consumption per build block) int 19 5 3600
 physio_stress.saturation_craft (One Consumption per crafted item) int 25 5 3600
 physio_stress.thirst_base (Base thirst consumption of eating per time) int 1300 100 3600
 physio_stress.thirst_walked (One Consumption thirst per walked distance) int 100 10 3600
 physio_stress.thirst_swam (One Consumption thirst per swam distance) int 80 10 3600
-physio_stress.thirst_dug (One Consumption thirst per dug blocks) int 13 5 3600
+physio_stress.thirst_dug (One Consumption thirst per dug blocks) int 25 5 3600
 physio_stress.thirst_build (One Consumption thirst per build block) int 13 5 3600
 physio_stress.thirst_craft (One Consumption per crafted item) int 35 5 3600
+physio_stress.dig_snappy (Correction for digging snappy nodes) float 0.25
+physio_stress.dig_cracky (Correction for digging cracky nodes) float 1
+physio_stress.dig_crumbly (Correction for digging crumbly nodes) float 0.5
+physio_stress.dig_choppy (Correction for digging choppy nodes) float 0.75

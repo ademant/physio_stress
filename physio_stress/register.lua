@@ -52,8 +52,22 @@ minetest.register_on_joinplayer(function(player)
 			ps[attr]=patt
 		end
 	end
+	for i,attr in ipairs({"cracky","crumbly","snappy","choppy"}) do
+		ps[attr] = 0
+	end
 	physio_stress.hud_init(player,"exhaustion")
 	physio_stress.hud_init(player,"saturation")
 	physio_stress.hud_init(player,"thirst")
+end)
+
+minetest.register_on_dignode(function(pos,oldnode,player)
+	if player ~= nil then
+		local ps=physio_stress.player[player:get_player_name()]
+		if ps ~= nil then
+			for i,attr in ipairs(physio_stress.dig_groups) do
+				ps[attr] = ps[attr]+minetest.get_item_group(oldnode.name,attr)
+			end
+		end
+	end
 end)
 
