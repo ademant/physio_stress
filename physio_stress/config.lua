@@ -76,3 +76,11 @@ xpfw.register_attribute("thirst",{min=0,max=physio_stress.thirstmax,
 	hud=1
 	})
 end
+for i,attr in ipairs({"sunburn","nyctophoby"}) do
+	if minetest.settings:get("physio_stress."..attr) then
+	xpfw.register_attribute(attr,{min=0,max=20,
+		default=0,
+		hud=1
+		})
+	end
+end

@@ -12,16 +12,56 @@ minetest.register_globalstep(function(dtime)
 			local player_armor=armor.def[name].count
 			local act_node=minetest.get_node(act_pos)
 			
-			-- sunburn
-			if physio_stress.attributes.sunburn and act_light and not ps.sunburn_protect then
-				local player_meanlight=xpfw.player_get_attribute(player,"meanlight")
---				print(player_meanlight)
-				local sudiff=ps.sunburn_diff
-				if player_armor>0 then
-					sudiff=sudiff/ps.sunburn_armor
+			--sunburn/nyctophoby
+			local player_meanlight=xpfw.player_get_attribute(player,"meanlight")
+			if act_light > player_meanlight then
+				-- act light bigger than player meanlight: check for sunburn
+				if not ps.sunburn_protect then
+					local sudiff=ps.sunburn_diff
+					if player_armor>0 then
+						sudiff=sudiff/ps.sunburn_armor
+					end
+					if ((act_light-player_meanlight)>sudiff) then
+						print(act_light,player_meanlight,sudiff,name)
+						xpfw.player_add_attribute(player,"sunburn",1)
+					end
 				end
-				if ((act_light-player_meanlight)>sudiff) then
-					player:set_hp( player:get_hp() - ps.sunburn_hp )
+				-- regeneratr from nyctophoby
+				if xpfw.player_get_attribute(player,"nyctophoby")>1 then
+					xpfw.player_sub_attribute(player,"nyctophoby",1)
+				end
+			else
+				-- act light smaller than player meanlight: check for nyctophoby
+				if not ps.nyctophoby_protect then
+					local node=minetest.get_node(act_pos)
+					if node.name == "water" then
+						local bair=true
+						local dist=5
+						while bair do
+							node=minetest.find_node_near(act_pos,dist,"air")
+							if node==nil then
+								dist=math.ceil(1.5*dist)
+							else
+								bair=false
+								act_light=minetest.get_node_light(node)
+							end
+							if dist>50 then bair=false end
+						end
+					end
+					if node ~= nil then
+						local nydiff=ps.nyctophoby_diff
+						if player_armor>0 then
+							nydiff=nydiff/ps.nyctophoby_armor
+						end
+						if ((player_meanlight-act_light)>nydiff) then
+							print(act_light,player_meanlight,nydiff,name)
+							xpfw.player_add_attribute(player,"nyctophoby",1)
+						end
+					end
+				end
+				-- regenerate from sunburn
+				if xpfw.player_get_attribute(player,"sunburn")>1 then
+					xpfw.player_sub_attribute(player,"sunburn",1)
 				end
 			end
 			-- count down then sunburn protection;
@@ -31,44 +71,20 @@ minetest.register_globalstep(function(dtime)
 					ps.sunburn_protect = false
 				end
 			end
-			
-			-- nyctophoby
-			if physio_stress.attributes.nyctophoby and act_light and not ps.nyctophoby_protect then
-				local node=minetest.get_node(act_pos)
-				if node.name == "water" then
-					local bair=true
-					local dist=5
-					while bair do
-						node=minetest.find_node_near(act_pos,dist,"air")
-						if node==nil then
-							dist=math.ceil(1.5*dist)
-						else
-							bair=false
-							act_light=minetest.get_node_light(node)
-						end
-						if dist>50 then bair=false end
-					end
-				end
-				if node ~= nil then
-					local player_meanlight=xpfw.player_get_attribute(player,"meanlight")
---					print("nycto: "..(player_meanlight-act_light))
-					local nydiff=ps.nyctophoby_diff
-					if player_armor>0 then
-						nydiff=nydiff/ps.nyctophoby_armor
-					end
-					if ((player_meanlight-act_light)>nydiff) then
-						player:set_hp( player:get_hp() - ps.nyctophoby_hp )
-					end
-				end
-			end
 			-- count down then nyctophoby protection;
 			if ps.nyctophoby_protect then
 				ps.nyctophoby_delay=ps.nyctophoby_delay - dtime
 				if ps.nyctophoby_delay < 0 then
+					minetest.chat_send_player(name,"no sunburn/nycto protection")
 					ps.nyctophoby_protect = false
 				end
 			end
-			
+			for i,attr in ipairs({"sunburn","nyctophoby"}) do
+				if xpfw.player_get_attribute(player,attr)>19 then
+					minetest.chat_send_player(name,"Beware of "..attr)
+					player:set_hp( player:get_hp() - ps[attr.."_hp"] )
+				end
+			end
 			-- exhaustion
 			if physio_stress.attributes.exhaustion then
 				-- get max of speeds
