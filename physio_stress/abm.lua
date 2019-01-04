@@ -1,6 +1,7 @@
 minetest.register_globalstep(function(dtime)
 	physio_stress.dt=physio_stress.dt+dtime
 	if physio_stress.dt > physio_stress.dtime then
+		local starttime=os.clock()
 		physio_stress.dt=0
 		local players = minetest.get_connected_players()
 		for i=1, #players do
@@ -13,55 +14,57 @@ minetest.register_globalstep(function(dtime)
 			local act_node=minetest.get_node(act_pos)
 			
 			--sunburn/nyctophoby
-			local player_meanlight=xpfw.player_get_attribute(player,"meanlight")
-			if act_light > player_meanlight then
-				-- act light bigger than player meanlight: check for sunburn
-				if not ps.sunburn_protect then
-					local sudiff=ps.sunburn_diff
-					if player_armor>0 then
-						sudiff=sudiff/ps.sunburn_armor
-					end
-					if ((act_light-player_meanlight)>sudiff) then
-						print(act_light,player_meanlight,sudiff,name)
-						xpfw.player_add_attribute(player,"sunburn",1)
-					end
-				end
-				-- regeneratr from nyctophoby
-				if xpfw.player_get_attribute(player,"nyctophoby")>1 then
-					xpfw.player_sub_attribute(player,"nyctophoby",1)
-				end
-			else
-				-- act light smaller than player meanlight: check for nyctophoby
-				if not ps.nyctophoby_protect then
-					local node=minetest.get_node(act_pos)
-					if node.name == "water" then
-						local bair=true
-						local dist=5
-						while bair do
-							node=minetest.find_node_near(act_pos,dist,"air")
-							if node==nil then
-								dist=math.ceil(1.5*dist)
-							else
-								bair=false
-								act_light=minetest.get_node_light(node)
-							end
-							if dist>50 then bair=false end
-						end
-					end
-					if node ~= nil then
-						local nydiff=ps.nyctophoby_diff
+			if act_light ~= nil then
+				local player_meanlight=xpfw.player_get_attribute(player,"meanlight")
+				if act_light > player_meanlight then
+					-- act light bigger than player meanlight: check for sunburn
+					if not ps.sunburn_protect then
+						local sudiff=ps.sunburn_diff
 						if player_armor>0 then
-							nydiff=nydiff/ps.nyctophoby_armor
+							sudiff=sudiff/ps.sunburn_armor
 						end
-						if ((player_meanlight-act_light)>nydiff) then
-							print(act_light,player_meanlight,nydiff,name)
-							xpfw.player_add_attribute(player,"nyctophoby",1)
+						if ((act_light-player_meanlight)>sudiff) then
+							print(act_light,player_meanlight,sudiff,name)
+							xpfw.player_add_attribute(player,"sunburn",1)
 						end
 					end
-				end
-				-- regenerate from sunburn
-				if xpfw.player_get_attribute(player,"sunburn")>1 then
-					xpfw.player_sub_attribute(player,"sunburn",1)
+					-- regeneratr from nyctophoby
+					if xpfw.player_get_attribute(player,"nyctophoby")>1 then
+						xpfw.player_sub_attribute(player,"nyctophoby",1)
+					end
+				else
+					-- act light smaller than player meanlight: check for nyctophoby
+					if not ps.nyctophoby_protect then
+						local node=minetest.get_node(act_pos)
+						if node.name == "water" then
+							local bair=true
+							local dist=5
+							while bair do
+								node=minetest.find_node_near(act_pos,dist,"air")
+								if node==nil then
+									dist=math.ceil(1.5*dist)
+								else
+									bair=false
+									act_light=minetest.get_node_light(node)
+								end
+								if dist>50 then bair=false end
+							end
+						end
+						if node ~= nil then
+							local nydiff=ps.nyctophoby_diff
+							if player_armor>0 then
+								nydiff=nydiff/ps.nyctophoby_armor
+							end
+							if ((player_meanlight-act_light)>nydiff) then
+								print(act_light,player_meanlight,nydiff,name)
+								xpfw.player_add_attribute(player,"nyctophoby",1)
+							end
+						end
+					end
+					-- regenerate from sunburn
+					if xpfw.player_get_attribute(player,"sunburn")>1 then
+						xpfw.player_sub_attribute(player,"sunburn",1)
+					end
 				end
 			end
 			-- count down then sunburn protection;
@@ -93,13 +96,11 @@ minetest.register_globalstep(function(dtime)
 							xpfw.player_get_attribute(player,"mean_dig_speed"),
 							xpfw.player_get_attribute(player,"mean_craft_speed"),
 							xpfw.player_get_attribute(player,"mean_build_speed") )
---				print("exhaust "..exh)
 				local act_exh=xpfw.player_get_attribute(player,"exhaustion")
-				local act_sat=xpfw.player_get_attribute(player,"saturation")
 				-- if one speed excel actual exhaustion level than set to max.
 				if (exh > act_exh) then
 					xpfw.player_set_attribute(player,"exhaustion",exh)
-				elseif act_sat > 0 then
+				elseif (act_exh > 0) and (act_exh-exh)>=1 then
 					xpfw.player_sub_attribute(player,"exhaustion",1)
 				end
 				if exh > 18 then
@@ -173,5 +174,6 @@ minetest.register_globalstep(function(dtime)
 				end
 			end
 		end
+--	print("physio_stress_abm: "..1000*(os.clock()-starttime))
 	end
 end)
