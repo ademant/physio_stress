@@ -1,14 +1,14 @@
 if minetest.get_modpath("hudbars") then
     hb.register_hudbar('exhaustion', 0xffffff, "Exhaustion", {
-        bar = 'physio_stress_hudbars_bar.png',
+        bar = 'physio_stress_hudbars_bar.png^[colorize:#aa7788',
         icon = 'physio_stress_exhaust_16.png'
     }, 20, 20, false)
     hb.register_hudbar('saturation', 0xffffff, "Saturation", {
-        bar = 'physio_stress_hudbars_bar.png',
+        bar = 'physio_stress_hudbars_bar.png^[colorize:#ffff00',
         icon = 'physio_stress_hunger.png'
     }, physio_stress.saturationmax, physio_stress.saturationmax, false)
     hb.register_hudbar('thirst', 0xffffff, "Thirst", {
-        bar = 'physio_stress_hudbars_bar.png',
+        bar = 'physio_stress_hudbars_bar.png^[colorize:#0000ff',
         icon = 'physio_stress_thirst.png'
     }, physio_stress.thirstmax, physio_stress.thirstmax, false)
     
