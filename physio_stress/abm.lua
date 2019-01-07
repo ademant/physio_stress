@@ -91,16 +91,25 @@ minetest.register_globalstep(function(dtime)
 			-- exhaustion
 			if physio_stress.attributes.exhaustion then
 				-- get max of speeds
-				local exh=math.max(xpfw.player_get_attribute(player,"mean_swam_speed"),
-							xpfw.player_get_attribute(player,"mean_walked_speed"),
-							xpfw.player_get_attribute(player,"mean_dig_speed"),
-							xpfw.player_get_attribute(player,"mean_craft_speed"),
-							xpfw.player_get_attribute(player,"mean_build_speed") )
+				local no_speeds=0
+				local exh=0
+				for i,attr in ipairs({"swam","walked","dig","craft","build"}) do
+					local aspeed=xpfw.player_get_attribute(player,"mean_"..attr.."_speed")
+					if aspeed ~= nil then
+						if aspeed > 0 then
+							no_speeds=no_speeds+1
+							exh=exh+aspeed*aspeed
+						end
+					end
+				end
+				if no_speeds>0 then
+					exh=math.sqrt(exh)
+				end
 				local act_exh=xpfw.player_get_attribute(player,"exhaustion")
 				-- if one speed excel actual exhaustion level than set to max.
 				if (exh > act_exh) then
 					xpfw.player_set_attribute(player,"exhaustion",exh)
-				elseif (act_exh > 0) and (act_exh-exh)>=1 then
+				elseif (act_exh > 0) and (act_exh>=(exh+1)) then
 					xpfw.player_sub_attribute(player,"exhaustion",1)
 				end
 				if exh > 18 then
