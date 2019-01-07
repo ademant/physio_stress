@@ -14,6 +14,7 @@ minetest.register_globalstep(function(dtime)
 			
 			--sunburn/nyctophoby
 			local player_meanlight=xpfw.player_get_attribute(player,"meanlight")
+			if act_light==nil then act_light=player_meanlight end
 			if act_light > player_meanlight then
 				-- act light bigger than player meanlight: check for sunburn
 				if not ps.sunburn_protect then
