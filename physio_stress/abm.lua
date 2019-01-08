@@ -24,7 +24,6 @@ minetest.register_globalstep(function(dtime)
 							sudiff=sudiff/ps.sunburn_armor
 						end
 						if ((act_light-player_meanlight)>sudiff) then
-							print(act_light,player_meanlight,sudiff,name)
 							xpfw.player_add_attribute(player,"sunburn",1)
 						end
 					end
@@ -53,7 +52,6 @@ minetest.register_globalstep(function(dtime)
 							if player_armor>0 then
 								nydiff=nydiff/ps.nyctophoby_armor
 							end
-							print(player_meanlight,act_light,nydiff)
 							if ((player_meanlight-act_light)>nydiff) then
 								print(act_light,player_meanlight,nydiff,name)
 								xpfw.player_add_attribute(player,"nyctophoby",1)
