@@ -29,9 +29,7 @@ minetest.register_globalstep(function(dtime)
 						end
 					end
 					-- regeneratr from nyctophoby
-					if xpfw.player_get_attribute(player,"nyctophoby")>1 then
 						xpfw.player_sub_attribute(player,"nyctophoby",1)
-					end
 				else
 					-- act light smaller than player meanlight: check for nyctophoby
 					if not ps.nyctophoby_protect then
@@ -55,6 +53,7 @@ minetest.register_globalstep(function(dtime)
 							if player_armor>0 then
 								nydiff=nydiff/ps.nyctophoby_armor
 							end
+							print(player_meanlight,act_light,nydiff)
 							if ((player_meanlight-act_light)>nydiff) then
 								print(act_light,player_meanlight,nydiff,name)
 								xpfw.player_add_attribute(player,"nyctophoby",1)
@@ -62,30 +61,21 @@ minetest.register_globalstep(function(dtime)
 						end
 					end
 					-- regenerate from sunburn
-					if xpfw.player_get_attribute(player,"sunburn")>1 then
 						xpfw.player_sub_attribute(player,"sunburn",1)
-					end
-				end
-			end
-			-- count down then sunburn protection;
-			if ps.sunburn_protect then
-				ps.sunburn_delay=ps.sunburn_delay - dtime
-				if ps.sunburn_delay < 0 then
-					ps.sunburn_protect = false
-				end
-			end
-			-- count down then nyctophoby protection;
-			if ps.nyctophoby_protect then
-				ps.nyctophoby_delay=ps.nyctophoby_delay - dtime
-				if ps.nyctophoby_delay < 0 then
-					minetest.chat_send_player(name,"no sunburn/nycto protection")
-					ps.nyctophoby_protect = false
 				end
 			end
 			for i,attr in ipairs({"sunburn","nyctophoby"}) do
 				if xpfw.player_get_attribute(player,attr)>19 then
 					minetest.chat_send_player(name,"Beware of "..attr)
 					player:set_hp( player:get_hp() - ps[attr.."_hp"] )
+					xpfw.player_sub_attribute(player,attr,1)
+				end
+				if ps[attr.."_protect"] then
+					ps[attr.."_delay"]=ps[attr.."_delay"]-dtime
+					if ps[attr.."_delay"] < 0 then
+						minetest.chat_send_player(name,"no "..attr.." protection")
+						ps[attr.."_protect"] = false
+					end
 				end
 			end
 			-- exhaustion
