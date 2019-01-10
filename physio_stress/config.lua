@@ -12,7 +12,11 @@ physio_stress.player={}
 physio_stress.exhausted_build={}
 physio_stress.exhausted_dig={}
 physio_stress.st_coeff_names={"walked","swam","dug","build","base","craft"}
+physio_stress.action_names={"walked","swam","dug","build","craft"}
 physio_stress.dig_groups={"cracky","crumbly","snappy","choppy"}
+physio_stress.phobies={"sunburn","nyctophoby"}
+physio_stress.ingestion={"saturation","thirst"}
+physio_stress.player_fields={"sunburn_armor_dmaxlight","sunburn_maxlight","sunburn_delay","sunburn_diff","nyctophoby_diff","sunburn_hp","nyctophoby_delay","nyctophoby_hp","sunburn_armor","nyctophoby_armor","nyctophoby_minlight"}
 
 -- check for global variables, stored in mod_storage
 for i,attr in ipairs({"playerlist"}) do
@@ -26,11 +30,11 @@ end
 
 -- get default values for new players
 physio_stress.default_player={}
-for i,attr in ipairs({"sunburn_delay","sunburn_diff","nyctophoby_diff","sunburn_hp","nyctophoby_delay","nyctophoby_hp","sunburn_armor","nyctophoby_armor"}) do
+for i,attr in ipairs(physio_stress.player_fields) do
 	physio_stress.default_player[attr]=tonumber(minetest.settings:get("physio_stress."..attr)) or 1
 end
 for i,attr in ipairs(physio_stress.st_coeff_names) do
-	for j,st in ipairs({"saturation","thirst"}) do 
+	for j,st in ipairs(physio_stress.ingestion) do 
 		local sat_coeff = tonumber(minetest.settings:get("physio_stress."..st.."_"..attr)) or 100
 		if sat_coeff > 0 then
 			physio_stress.default_player[st.."_"..attr] = sat_coeff

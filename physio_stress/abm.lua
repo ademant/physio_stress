@@ -20,10 +20,16 @@ minetest.register_globalstep(function(dtime)
 					-- act light bigger than player meanlight: check for sunburn
 					if not ps.sunburn_protect then
 						local sudiff=ps.sunburn_diff
+						local sumax=ps.sunburn_max
 						if player_armor>0 then
 							sudiff=sudiff/ps.sunburn_armor
+							sumax=sumax+ps.sunburn_armor_dmaxlight
 						end
-						if ((act_light-player_meanlight)>sudiff) then
+						-- sunburn is increased if:
+						-- 1. Difference between actual light level and player mean light level is to high
+						--    simulating the effect when going into full sunlight out of buildings and you can't see enything
+						-- 2. Too high sun level with real sunburn; the threshold is increased by armor
+						if ((act_light-player_meanlight)>sudiff) or (act_light > sumax) then
 							xpfw.player_add_attribute(player,"sunburn",1)
 						end
 					end
@@ -32,6 +38,7 @@ minetest.register_globalstep(function(dtime)
 				else
 					-- act light smaller than player meanlight: check for nyctophoby
 					if not ps.nyctophoby_protect then
+						-- under water there is no light, so find the nearest air and get this light level
 						local node=minetest.get_node(act_pos)
 						if node.name == "water" then
 							local bair=true
@@ -49,10 +56,15 @@ minetest.register_globalstep(function(dtime)
 						end
 						if node ~= nil then
 							local nydiff=ps.nyctophoby_diff
+							local nymin=ps.nyctophoby_minlight
 							if player_armor>0 then
 								nydiff=nydiff/ps.nyctophoby_armor
 							end
-							if ((player_meanlight-act_light)>nydiff) then
+							-- nyctophoby is increased by:
+							-- 1. Difference between actual light and players mean light
+							--    simulating the effect when going into buildings from full sunlight
+							-- 2. Too low level (hardcoded)
+							if ((player_meanlight-act_light)>nydiff) or (act_light < nymin) then
 								print(act_light,player_meanlight,nydiff,name)
 								xpfw.player_add_attribute(player,"nyctophoby",1)
 							end
@@ -62,7 +74,7 @@ minetest.register_globalstep(function(dtime)
 						xpfw.player_sub_attribute(player,"sunburn",1)
 				end
 			end
-			for i,attr in ipairs({"sunburn","nyctophoby"}) do
+			for i,attr in ipairs(physio_stress.phobies) do
 				if xpfw.player_get_attribute(player,attr)>19 then
 					minetest.chat_send_player(name,"Beware of "..attr)
 					player:set_hp( player:get_hp() - ps[attr.."_hp"] )
@@ -81,7 +93,7 @@ minetest.register_globalstep(function(dtime)
 				-- get max of speeds
 				local no_speeds=0
 				local exh=0
-				for i,attr in ipairs({"swam","walked","dig","craft","build"}) do
+				for i,attr in ipairs(physio_stress.action_names) do --swam, walk etc.
 					local aspeed=xpfw.player_get_attribute(player,"mean_"..attr.."_speed")
 					if aspeed ~= nil then
 						if aspeed > 0 then
@@ -108,7 +120,7 @@ minetest.register_globalstep(function(dtime)
 			
 			-- saturation/thirst
 			
-			for j,st in ipairs({"saturation","thirst"}) do -- call for saturation/thirst similar calls
+			for j,st in ipairs(physio_stress.ingestion) do -- call for saturation/thirst similar calls
 				local dsat=0
 				-- for each coefficient (walked, swam, dug, build, base consumption) the sum of saturation/thirst consumption is added
 				for i,attr in ipairs(physio_stress.st_coeff_names) do
@@ -136,13 +148,14 @@ minetest.register_globalstep(function(dtime)
 
 				else
 				-- otherwise hitpoints are reduced
+					minetest.chat_send_player(name,"Beware of "..st)
 					local hp=player:get_hp()-0.5
 					player:set_hp(hp)
 				end
 			end
 			
 			-- actuall stats are copied
-			for i,attr in ipairs(physio_stress.st_coeff_names) do
+			for i,attr in ipairs(physio_stress.action_names) do
 				local patt=xpfw.player_get_attribute(player,attr)
 				if patt ~= nil then
 					ps[attr]=patt

@@ -8,11 +8,14 @@ physio_stress.prefix (Physio prefix for metadata) string "physio"
 physio_stress.sunburn_delay (Sunburn delay for start hurting) int 10 1 1000
 physio_stress.sunburn_diff (Sunburn threshold for damage) int 4 1 14
 physio_stress.sunburn_armor (Sunburn armor protection) float 0.5
-physio_stress.subnurn_hp (Sunburn health points damage) float 0.5 
+physio_stress.sunburn_hp (Sunburn health points damage) float 0.5 
+physio_stress.sunburn_maxlight (Max light without sunburn) float 13
+physio_stress.sunburn_armor_dmaxlight (armor enhancement for maxlight) float 1
 physio_stress.nyctophyby_delay (Nyctophoby delay for start hurting) int 10 1 1000
 physio_stress.nyctophoby_diff (Nyctophoby threshold for damage) int 5 1 14
 physio_stress.nyctophoby_armor (Nyctophoby armor protection) float 0.5 
 physio_stress.nyctophoby_hp (Nyctophoby health points damage) float 0.5 
+physio_stress.nyctophoby_minlight (Min light without nyctophoby) float 1
 physio_stress.saturation_max (Max. saturation value) int 20 10 50
 physio_stress.thirst_max (Max. thirst value) int 20 10 50
 physio_stress.saturation_recreation (Heal by saturation per dtime) float 1

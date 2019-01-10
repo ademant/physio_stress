@@ -14,9 +14,11 @@ end)
 
 minetest.register_on_respawnplayer(function(player)
 	local playername = player:get_player_name()
-	local ps=physio_stress.player[playername]
-	for i,attr in ipairs({"thirst","saturation","exhaustion"}) do
+--	print("Resetting for "..playername)
+	for i,attr in ipairs(physio_stress.ingestion) do
+--		print("Resetting "..attr.." for player "..playername)
 		xpfw.player_reset_single_attribute(player,attr)
+		physio_stress.hud_update(player,attr,xpfw.player_get_attribute(player,attr))
 	end
 end)
 
@@ -36,7 +38,7 @@ minetest.register_on_joinplayer(function(player)
 	else
 		local ps=physio_stress.player[playername]
 		print(dump2(ps))
-		for i,attr in ipairs({"sunburn_diff","nyctophoby_diff","sunburn_hp","nyctophoby_hp","sunburn_armor","nyctophoby_armor"}) do
+		for i,attr in ipairs(physio_stress.player_fields) do
 			if ps[attr] == nil then
 				ps[attr]=minetest.settings:get("physio_stress."..attr) or 1
 			end
@@ -54,9 +56,12 @@ minetest.register_on_joinplayer(function(player)
 	for i,attr in ipairs({"cracky","crumbly","snappy","choppy"}) do
 		ps[attr] = 0
 	end
+	for i,attr in ipairs(physio_stress.ingestion) do
+		xpfw.player_reset_single_attribute(player,attr)
+		physio_stress.hud_init(player,attr)
+	end
+	xpfw.player_reset_single_attribute(player,"exhaustion")
 	physio_stress.hud_init(player,"exhaustion")
-	physio_stress.hud_init(player,"saturation")
-	physio_stress.hud_init(player,"thirst")
 end)
 
 minetest.register_on_dignode(function(pos,oldnode,player)
