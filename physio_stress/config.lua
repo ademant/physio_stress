@@ -33,6 +33,7 @@ physio_stress.default_player={}
 for i,attr in ipairs(physio_stress.player_fields) do
 	physio_stress.default_player[attr]=tonumber(minetest.settings:get("physio_stress."..attr)) or 1
 end
+print(dump2(physio_stress.default_player))
 for i,attr in ipairs(physio_stress.st_coeff_names) do
 	for j,st in ipairs(physio_stress.ingestion) do 
 		local sat_coeff = tonumber(minetest.settings:get("physio_stress."..st.."_"..attr)) or 100

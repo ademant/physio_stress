@@ -20,7 +20,7 @@ minetest.register_globalstep(function(dtime)
 					-- act light bigger than player meanlight: check for sunburn
 					if not ps.sunburn_protect then
 						local sudiff=ps.sunburn_diff
-						local sumax=ps.sunburn_max
+						local sumax=ps.sunburn_maxlight
 						if player_armor>0 then
 							sudiff=sudiff/ps.sunburn_armor
 							sumax=sumax+ps.sunburn_armor_dmaxlight
