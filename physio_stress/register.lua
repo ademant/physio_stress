@@ -15,9 +15,9 @@ end)
 minetest.register_on_respawnplayer(function(player)
 	local playername = player:get_player_name()
 	local ps=physio_stress.player[playername]
-	ps.exhaustion=0
-	ps.saturation=physio_stress.saturationmax
-	ps.thirst=physio_stress.thirstmax
+	for i,attr in ipairs({"thirst","saturation","exhaustion"}) do
+		xpfw.player_reset_single_attribute(player,attr)
+	end
 end)
 
 minetest.register_on_joinplayer(function(player)
@@ -29,7 +29,7 @@ minetest.register_on_joinplayer(function(player)
 		else
 			physio_stress.playerlist=playername
 		end
-		print(physio_stress.playerlist)
+--		print(physio_stress.playerlist)
 	end
 	if physio_stress.player[playername] == nil then
 		physio_stress.player[playername]=table.copy(physio_stress.default_player)
@@ -41,8 +41,6 @@ minetest.register_on_joinplayer(function(player)
 				ps[attr]=minetest.settings:get("physio_stress."..attr) or 1
 			end
 		end
-		ps.saturation=physio_stress.saturationmax
-		ps.thirst=physio_stress.thirstmax
 	end
 	local ps=physio_stress.player[playername]
 	

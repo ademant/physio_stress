@@ -34,14 +34,13 @@ function physio_stress.eat(hp_change, replace_with_item, itemstack, user, pointe
 end
 
 function physio_stress.item_eat(hunger_change, replace_with_item, heal, thirst_change,sound)
+	print(hunger_change,thirst_change)
 	return function(itemstack, user, pointed_thing)
 		if itemstack:take_item() ~= nil and user ~= nil then
 			local name = user:get_player_name()
 			local ps=physio_stress.player[name]
 			local h = xpfw.player_get_attribute(user,"saturation")
 			local th = xpfw.player_get_attribute(user,"thirst")
---			local h = tonumber(ps.saturation)
---			local th = tonumber(ps.thirst)
 			local hp = user:get_hp()
 			if h == nil or hp == nil then
 				return
@@ -51,7 +50,7 @@ function physio_stress.item_eat(hunger_change, replace_with_item, heal, thirst_c
 			-- Saturation
 			if hunger_change then
 				if hunger_change > 0 then
-					print("eat "..hunger_change)
+--					print("eat "..hunger_change)
 					xpfw.player_add_attribute(user,"saturation",hunger_change)
 				end
 			end
