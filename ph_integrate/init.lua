@@ -12,6 +12,9 @@ local cf={["farming:grain_coffee_cup_hot"]={drink_hp=10},
 	["default:potato"]={drink_hp=2},
 	["default:carrot"]={drink_hp=2},
 	["moretrees:coconut_milk"]={drink_hp=10},
+	["mtfoods:orange_juice"]={drink_hp=10},
+	["mtfoods:apple_juice"]={drink_hp=10},
+	["mtfoods:apple_cider"]={drink_hp=15},
 }
 for i,def in pairs(cf) do
 	if minetest.registered_items[i]~=nil then
