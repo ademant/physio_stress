@@ -30,7 +30,7 @@ minetest.register_globalstep(function(dtime)
 						--    simulating the effect when going into full sunlight out of buildings and you can't see enything
 						-- 2. Too high sun level with real sunburn; the threshold is increased by armor
 						if ((act_light-player_meanlight)>sudiff) or (act_light > sumax) then
-							xpfw.player_add_attribute(player,"sunburn",1)
+							xpfw.player_add_attribute(player,"sunburn",0.5)
 						end
 					end
 					-- regeneratr from nyctophoby
@@ -66,7 +66,7 @@ minetest.register_globalstep(function(dtime)
 							-- 2. Too low level (hardcoded)
 							if ((player_meanlight-act_light)>nydiff) or (act_light < nymin) then
 								print(act_light,player_meanlight,nydiff,name)
-								xpfw.player_add_attribute(player,"nyctophoby",1)
+								xpfw.player_add_attribute(player,"nyctophoby",0.5)
 							end
 						end
 					end
@@ -105,13 +105,13 @@ minetest.register_globalstep(function(dtime)
 				if no_speeds>0 then
 					exh=math.sqrt(exh)
 				end
-				local act_exh=xpfw.player_get_attribute(player,"exhaustion")
+--				local act_exh=xpfw.player_get_attribute(player,"exhaustion")
 				-- if one speed excel actual exhaustion level than set to max.
-				if (exh > act_exh) then
-					xpfw.player_set_attribute(player,"exhaustion",exh)
-				elseif (act_exh > 0) and (act_exh>=(exh+1)) then
-					xpfw.player_sub_attribute(player,"exhaustion",1)
-				end
+--				if (exh > act_exh) then
+					xpfw.player_add_attribute(player,"exhaustion",exh)
+--				elseif (act_exh > 0) and (act_exh>=(exh+1)) then
+--					xpfw.player_sub_attribute(player,"exhaustion",1)
+--				end
 				if exh > 18 then
 					local ret = playereffects.apply_effect_type("exhausted", 60, player)
 				end

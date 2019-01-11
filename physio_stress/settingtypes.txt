@@ -35,3 +35,5 @@ physio_stress.dig_snappy (Correction for digging snappy nodes) float 0.25
 physio_stress.dig_cracky (Correction for digging cracky nodes) float 1
 physio_stress.dig_crumbly (Correction for digging crumbly nodes) float 0.5
 physio_stress.dig_choppy (Correction for digging choppy nodes) float 0.75
+physio_stress.exhaustion_mean_weight (Weight factor for mean crafting experience) int 50 1 10000
+physio_stress.exhaustion_recreation (Weight factor for mean crafting experience) int 5 1 10000
