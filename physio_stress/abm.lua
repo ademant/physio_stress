@@ -10,6 +10,8 @@ minetest.register_globalstep(function(dtime)
 			local ps=physio_stress.player[name]
 			local act_pos=player:get_pos()
 			local act_light=minetest.get_node_light(act_pos)
+			print(dump2(act_pos))
+			print(act_light)
 			local player_armor=armor.def[name].count
 			local act_node=minetest.get_node(act_pos)
 			
@@ -31,6 +33,7 @@ minetest.register_globalstep(function(dtime)
 						-- 2. Too high sun level with real sunburn; the threshold is increased by armor
 						if ((act_light-player_meanlight)>sudiff) or (act_light > sumax) then
 							xpfw.player_add_attribute(player,"sunburn",0.5)
+							print(act_light,sudiff,sumax,player_meanlight)
 						end
 					end
 					-- regeneratr from nyctophoby
@@ -65,7 +68,7 @@ minetest.register_globalstep(function(dtime)
 							--    simulating the effect when going into buildings from full sunlight
 							-- 2. Too low level (hardcoded)
 							if ((player_meanlight-act_light)>nydiff) or (act_light < nymin) then
-								print(act_light,player_meanlight,nydiff,name)
+								print(act_light,player_meanlight,nydiff,name,nymin)
 								xpfw.player_add_attribute(player,"nyctophoby",0.5)
 							end
 						end
