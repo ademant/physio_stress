@@ -104,6 +104,8 @@ minetest.register_globalstep(function(dtime)
 				end
 				if no_speeds>0 then
 					exh=math.sqrt(exh)
+				else
+					exh = 0
 				end
 --				local act_exh=xpfw.player_get_attribute(player,"exhaustion")
 				-- if one speed excel actual exhaustion level than set to max.
@@ -112,7 +114,7 @@ minetest.register_globalstep(function(dtime)
 --				elseif (act_exh > 0) and (act_exh>=(exh+1)) then
 --					xpfw.player_sub_attribute(player,"exhaustion",1)
 --				end
-				if exh > 18 then
+				if exh > 19 then
 					local ret = playereffects.apply_effect_type("exhausted", 60, player)
 				end
 				physio_stress.hud_update(player,"exhaustion",xpfw.player_get_attribute(player,"exhaustion"))
