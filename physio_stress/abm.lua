@@ -1,6 +1,8 @@
 minetest.register_globalstep(function(dtime)
 	physio_stress.dt=physio_stress.dt+dtime
+	print(dtime)
 	if physio_stress.dt > physio_stress.dtime then
+		print("ping")
 		local starttime=os.clock()
 		physio_stress.dt=0
 		local players = minetest.get_connected_players()

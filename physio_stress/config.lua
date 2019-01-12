@@ -92,7 +92,7 @@ for i,attr in ipairs({"sunburn","nyctophoby","exhaustion"}) do
 	local attr_def={min=0,max=20,default=0,hud=1}
 	if attr=="exhaustion" then
 		attr_def.moving_average_factor=tonumber(minetest.settings:get("physio_stress.exhaustion_mean_weight")) or 50
-		attr_def.recreation_factor==tonumber(minetest.settings:get("physio_stress.exhaustion_recreation")) or 10
+		attr_def.recreation_factor=tonumber(minetest.settings:get("physio_stress.exhaustion_recreation")) or 10
 	end
 	xpfw.register_attribute(attr,attr_def)
 	end
