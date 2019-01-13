@@ -26,7 +26,7 @@ minetest.register_globalstep(function(dtime)
 				local player_meanlight=xpfw.player_get_attribute(player,"meanlight")
 				if act_light > player_meanlight then
 					-- act light bigger than player meanlight: check for sunburn
-					if (not ps.sunburn_protect) and (physio_stress.sunburn) then
+					if (not ps.sunburn_protect) and (physio_stress.attributes.sunburn) then
 						local sudiff=ps.sunburn_diff
 						local sumax=ps.sunburn_maxlight
 						if player_armor>0 then
@@ -46,7 +46,7 @@ minetest.register_globalstep(function(dtime)
 						xpfw.player_sub_attribute(player,"nyctophoby",1)
 				else
 					-- act light smaller than player meanlight: check for nyctophoby
-					if (not ps.nyctophoby_protect) and (physio_stress.nyctophoby) then
+					if (not ps.nyctophoby_protect) and (physio_stress.attributes.nyctophoby) then
 						-- under water there is no light, so find the nearest air and get this light level
 						local node=minetest.get_node(act_pos)
 						if node.name == "water" then
@@ -99,7 +99,7 @@ minetest.register_globalstep(function(dtime)
 				end
 			end
 			-- exhaustion
-			if physio_stress.attributes.exhaustion and physio_stress.exhaustion then
+			if physio_stress.attributes.exhaustion then
 				-- get max of speeds
 				local no_speeds=0
 				local exh=0
@@ -128,7 +128,7 @@ minetest.register_globalstep(function(dtime)
 			-- saturation/thirst
 			
 			for j,st in ipairs(physio_stress.ingestion) do -- call for saturation/thirst similar calls
-				if physio_stress[st] then
+				if physio_stress.attributes[st] then
 					local dsat=0
 					-- for each coefficient (walked, swam, dug, build, base consumption) the sum of saturation/thirst consumption is added
 					for i,attr in ipairs(physio_stress.st_coeff_names) do
