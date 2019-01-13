@@ -39,7 +39,7 @@ minetest.register_globalstep(function(dtime)
 						-- 2. Too high sun level with real sunburn; the threshold is increased by armor
 						if ((act_light-player_meanlight)>sudiff) or (act_light > sumax) then
 							xpfw.player_add_attribute(player,"sunburn",0.5)
-							print("sunburn"..act_light,sudiff,sumax,player_meanlight,player_armor)
+--							print("sunburn"..act_light,sudiff,sumax,player_meanlight,player_armor)
 						end
 					end
 					-- regeneratr from nyctophoby
@@ -75,7 +75,7 @@ minetest.register_globalstep(function(dtime)
 							--    simulating the effect when going into buildings from full sunlight
 							-- 2. Too low level (hardcoded)
 							if ((player_meanlight-act_light)>nydiff) or (act_light < nymin) then
-								print("night"..act_light,player_meanlight,nydiff,name,nymin)
+--								print("night"..act_light,player_meanlight,nydiff,name,nymin)
 								xpfw.player_add_attribute(player,"nyctophoby",0.5)
 							end
 						end
