@@ -1,8 +1,8 @@
 minetest.register_globalstep(function(dtime)
 	physio_stress.dt=physio_stress.dt+dtime
-	print(dtime)
+--	print("dtime "..dtime)
 	if physio_stress.dt > physio_stress.dtime then
-		print("ping")
+--		print("ping")
 		local starttime=os.clock()
 		physio_stress.dt=0
 		local players = minetest.get_connected_players()
@@ -12,9 +12,13 @@ minetest.register_globalstep(function(dtime)
 			local ps=physio_stress.player[name]
 			local act_pos=player:get_pos()
 			local act_light=minetest.get_node_light(act_pos)
-			print(dump2(act_pos))
-			print(act_light)
-			local player_armor=armor.def[name].count
+--			print(dump2(act_pos))
+--			print(act_light)
+--			print(dump2(ps))
+			local player_armor=0
+			if armor ~= nil then -- fail back to check if 3d_armor is used
+				local player_armor=armor.def[name].count
+			end
 			local act_node=minetest.get_node(act_pos)
 			
 			--sunburn/nyctophoby
@@ -22,7 +26,7 @@ minetest.register_globalstep(function(dtime)
 				local player_meanlight=xpfw.player_get_attribute(player,"meanlight")
 				if act_light > player_meanlight then
 					-- act light bigger than player meanlight: check for sunburn
-					if not ps.sunburn_protect then
+					if (not ps.sunburn_protect) and (physio_stress.sunburn) then
 						local sudiff=ps.sunburn_diff
 						local sumax=ps.sunburn_maxlight
 						if player_armor>0 then
@@ -35,14 +39,14 @@ minetest.register_globalstep(function(dtime)
 						-- 2. Too high sun level with real sunburn; the threshold is increased by armor
 						if ((act_light-player_meanlight)>sudiff) or (act_light > sumax) then
 							xpfw.player_add_attribute(player,"sunburn",0.5)
-							print(act_light,sudiff,sumax,player_meanlight)
+							print("sunburn"..act_light,sudiff,sumax,player_meanlight,player_armor)
 						end
 					end
 					-- regeneratr from nyctophoby
 						xpfw.player_sub_attribute(player,"nyctophoby",1)
 				else
 					-- act light smaller than player meanlight: check for nyctophoby
-					if not ps.nyctophoby_protect then
+					if (not ps.nyctophoby_protect) and (physio_stress.nyctophoby) then
 						-- under water there is no light, so find the nearest air and get this light level
 						local node=minetest.get_node(act_pos)
 						if node.name == "water" then
@@ -58,6 +62,7 @@ minetest.register_globalstep(function(dtime)
 								end
 								if dist>50 then bair=false end
 							end
+							print("dist"..dist)
 						end
 						if node ~= nil then
 							local nydiff=ps.nyctophoby_diff
@@ -70,7 +75,7 @@ minetest.register_globalstep(function(dtime)
 							--    simulating the effect when going into buildings from full sunlight
 							-- 2. Too low level (hardcoded)
 							if ((player_meanlight-act_light)>nydiff) or (act_light < nymin) then
-								print(act_light,player_meanlight,nydiff,name,nymin)
+								print("night"..act_light,player_meanlight,nydiff,name,nymin)
 								xpfw.player_add_attribute(player,"nyctophoby",0.5)
 							end
 						end
@@ -94,7 +99,7 @@ minetest.register_globalstep(function(dtime)
 				end
 			end
 			-- exhaustion
-			if physio_stress.attributes.exhaustion then
+			if physio_stress.attributes.exhaustion and physio_stress.exhaustion then
 				-- get max of speeds
 				local no_speeds=0
 				local exh=0
@@ -123,36 +128,38 @@ minetest.register_globalstep(function(dtime)
 			-- saturation/thirst
 			
 			for j,st in ipairs(physio_stress.ingestion) do -- call for saturation/thirst similar calls
-				local dsat=0
-				-- for each coefficient (walked, swam, dug, build, base consumption) the sum of saturation/thirst consumption is added
-				for i,attr in ipairs(physio_stress.st_coeff_names) do
-					local dref=ps[st.."_"..attr]
-					if dref==nil then
-						dref=physio_stress.default_player[st.."_"..attr]
+				if physio_stress[st] then
+					local dsat=0
+					-- for each coefficient (walked, swam, dug, build, base consumption) the sum of saturation/thirst consumption is added
+					for i,attr in ipairs(physio_stress.st_coeff_names) do
+						local dref=ps[st.."_"..attr]
+						if dref==nil then
+							dref=physio_stress.default_player[st.."_"..attr]
+						end
+						if dref==nil then dref=1 end
+						dsat=dsat+math.max(0,(xpfw.player_get_attribute(player,attr)-ps[attr])/(dref))
 					end
-					if dref==nil then dref=1 end
-					dsat=dsat+math.max(0,(xpfw.player_get_attribute(player,attr)-ps[attr])/(dref))
-				end
-				
-				-- small corrections due to hardness of dug nodes (by group stage): harder stones need more energy
-				local dref=ps[st.."_dug"]
-				if dref==nil then
-					dref=physio_stress.default_player[st.."_dug"]
-				end
-				for i,attr in ipairs(physio_stress.dig_groups) do
-					local correction=physio_stress.dig_correction[attr] or 1
-					dsat=dsat+math.max(0,(ps[attr]*correction)/(3*dref))
-				end
-				-- if player has enough saturation/thirst, this is reduced
-				if xpfw.player_get_attribute(player,st)>dsat then
-					xpfw.player_sub_attribute(player,st,dsat)
-					physio_stress.hud_update(player,st,xpfw.player_get_attribute(player,st))
+					
+					-- small corrections due to hardness of dug nodes (by group stage): harder stones need more energy
+					local dref=ps[st.."_dug"]
+					if dref==nil then
+						dref=physio_stress.default_player[st.."_dug"]
+					end
+					for i,attr in ipairs(physio_stress.dig_groups) do
+						local correction=physio_stress.dig_correction[attr] or 1
+						dsat=dsat+math.max(0,(ps[attr]*correction)/(3*dref))
+					end
+					-- if player has enough saturation/thirst, this is reduced
+					if xpfw.player_get_attribute(player,st)>dsat then
+						xpfw.player_sub_attribute(player,st,dsat)
+						physio_stress.hud_update(player,st,xpfw.player_get_attribute(player,st))
 
-				else
-				-- otherwise hitpoints are reduced
-					minetest.chat_send_player(name,"Beware of "..st)
-					local hp=player:get_hp()-0.5
-					player:set_hp(hp)
+					else
+					-- otherwise hitpoints are reduced
+						minetest.chat_send_player(name,"Beware of "..st)
+						local hp=player:get_hp()-0.5
+						player:set_hp(hp)
+					end
 				end
 			end
 			
