@@ -8,6 +8,11 @@ for i,attr in ipairs({"exhaustion","saturation","thirst","sunburn","nyctophoby"}
 	print(attr..is_status)
 end
 
+-- no sunburn if 3d armor is not available
+if minetest.get_modpath("3d_armor") == nil then
+	physio_stress.attributes.sunburn = false
+end
+
 physio_stress.dtime=tonumber(minetest.settings:get("physio_stress.dtime")) or 1
 physio_stress.dt=0
 physio_stress.saturationmax=tonumber(minetest.settings:get("physio_stress.saturation_max")) or 20
@@ -19,22 +24,29 @@ physio_stress.exhausted_dig={}
 physio_stress.st_coeff_names={"walked","swam","dug","build","base","craft"}
 physio_stress.action_names={"walked","swam","dug","build","craft"}
 physio_stress.dig_groups={"cracky","crumbly","snappy","choppy"}
-physio_stress.phobies={}
-physio_stress.ingestion={}
 physio_stress.player_fields={"sunburn_armor_dmaxlight","sunburn_maxlight","sunburn_delay","sunburn_diff","nyctophoby_diff","sunburn_hp","nyctophoby_delay","nyctophoby_hp","sunburn_armor","nyctophoby_armor","nyctophoby_minlight"}
 
+
+-- check, which phobies are enabled and initialize xpfw attribute
+physio_stress.phobies={}
 for i,attr in ipairs({"sunburn","nyctophoby"}) do
 	if physio_stress.attributes[attr]~=nil then
 		if physio_stress.attributes[attr] == true then
 			table.insert(physio_stress.phobies,attr)
+			xpfw.register_attribute(attr,{min=0,max=20,default=0,hud=1})
 		end
 	end
 end
+
+--check which ingestions are enabled and enable xpfw attribute
+physio_stress.ingestion={}
 for i,attr in ipairs({"saturation","thirst"}) do
 	if physio_stress.attributes[attr]~=nil then
 		if physio_stress.attributes[attr] == true then
-		
 			table.insert(physio_stress.ingestion,attr)
+			local att_max=tonumber(minetest.settings:get("physio_stress."..attr.."_max")) or 20
+			xpfw.register_attribute(attr,{min=0,max=att_max,default=att_max,
+				hud=1,})
 		end
 	end
 end
@@ -42,11 +54,6 @@ end
 -- check for global variables, stored in mod_storage
 for i,attr in ipairs({"playerlist"}) do
 	physio_stress[attr]=physio_stress.mod_storage:get_string(attr)
-end
-
--- no sunburn if 3d armor is not available
-if minetest.get_modpath("3d_armor") == nil then
-	physio_stress.attributes.sunburn = false
 end
 
 -- get default values for new players
@@ -82,7 +89,6 @@ if physio_stress.playerlist ~= "" then
 	end
 end
 
-
 -- dig correction values for saturation
 physio_stress.dig_correction={}
 for i,attr in ipairs(physio_stress.dig_groups) do
@@ -90,30 +96,12 @@ for i,attr in ipairs(physio_stress.dig_groups) do
 end
 
 
--- initialize saturation
-if minetest.settings:get("physio_stress.saturation") then
-	xpfw.register_attribute("saturation",{min=0,max=physio_stress.saturationmax,
-		default=physio_stress.saturationmax,
-		hud=1
-		})
-end
-
--- initialize thirst
-if minetest.settings:get("physio_stress.thirst") then
-xpfw.register_attribute("thirst",{min=0,max=physio_stress.thirstmax,
-	default=physio_stress.thirstmax,
-	hud=1
-	})
-end
-
--- initialize nyctophoby/sunburn/exhaustion
-for i,attr in ipairs({"sunburn","nyctophoby","exhaustion"}) do
-	if minetest.settings:get("physio_stress."..attr) then
-	local attr_def={min=0,max=20,default=0,hud=1}
-	if attr=="exhaustion" then
-		attr_def.moving_average_factor=tonumber(minetest.settings:get("physio_stress.exhaustion_mean_weight")) or 50
-		attr_def.recreation_factor=tonumber(minetest.settings:get("physio_stress.exhaustion_recreation")) or 10
-	end
-	xpfw.register_attribute(attr,attr_def)
+-- initialize exhaustion
+if physio_stress.attribute["exhaustion"] then
+	local attr_def={min=0,max=20,default=0,hud=1,
+		moving_average_factor=tonumber(minetest.settings:get("physio_stress.exhaustion_mean_weight")) or 50,
+		recreation_factor=tonumber(minetest.settings:get("physio_stress.exhaustion_recreation")) or 10,
+		}
+	xpfw.register_attribute("exhaustion",attr_def)
 	end
 end

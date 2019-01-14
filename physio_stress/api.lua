@@ -39,23 +39,33 @@ function physio_stress.item_eat(hunger_change, replace_with_item, poisen, heal, 
 		if itemstack:take_item() ~= nil and user ~= nil then
 			local name = user:get_player_name()
 			local ps=physio_stress.player[name]
-			local h = xpfw.player_get_attribute(user,"saturation")
-			local th = xpfw.player_get_attribute(user,"thirst")
 			local hp = user:get_hp()
-			if h == nil or hp == nil then
+			if hp == nil then
 				return
 			end
-			minetest.sound_play({name = sound or "hbhunger_eat_generic", gain = 1}, {pos=user:getpos(), max_hear_distance = 16})
+			minetest.sound_play({name = sound or "eat_generic", gain = 1}, {pos=user:getpos(), max_hear_distance = 16})
 			-- Saturation
-			if hunger_change then
-				if hunger_change > 0 then
-					xpfw.player_add_attribute(user,"saturation",hunger_change)
+			if physio_stress.attributes["saturation"] then -- is saturation enabled?
+				local h = xpfw.player_get_attribute(user,"saturation")
+				if h ~= nil then
+					if hunger_change then
+						if hunger_change > 0 then
+							-- factor 2, because for recreation of 1hp 2 saturation are used
+							xpfw.player_add_attribute(user,"saturation",2*hunger_change) 
+						end
+					end
 				end
+			else -- is saturation is disabled, increase hp
+				hp=min(20,max(0,hp+hunger_change))
+				user:set_hp(hp)
 			end
 			-- Thirst
-			if thirst_change then
-				if thirst_change > 0 then
-					xpfw.player_add_attribute(user,"thirst",thirst_change)
+			if physio_stress.attributes["thirst"] then -- is thirst enabled?
+				local th = xpfw.player_get_attribute(user,"thirst")
+				if thirst_change then
+					if thirst_change > 0 then
+						xpfw.player_add_attribute(user,"thirst",thirst_change)
+					end
 				end
 			end
 			-- Healing

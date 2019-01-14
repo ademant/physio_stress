@@ -36,3 +36,7 @@ Authors of media (textures)
 ---------------------------
   
 Created by ademant (CC BY 3.0):
+
+Authors of media (sound)
+---------------------------
+  eat_generic:	copied from mod hbhunger (https://github.com/creatively-survival/hbhunger)

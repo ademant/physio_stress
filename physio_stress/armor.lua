@@ -29,7 +29,7 @@ local local_get_recipe=function(tool,material)
 	return out_recipe
 end
 
-if minetest.get_modpath("3d_armor") ~= nil then
+if armor ~= nil then
 
 	for _,tool in ipairs({"helmet","chestplate","leggings","boots"}) do
 		minetest.register_craft({

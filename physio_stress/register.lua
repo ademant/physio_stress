@@ -15,8 +15,10 @@ end)
 minetest.register_on_respawnplayer(function(player)
 	local playername = player:get_player_name()
 	for i,attr in ipairs(physio_stress.ingestion) do
-		xpfw.player_reset_single_attribute(player,attr)
-		physio_stress.hud_update(player,attr,xpfw.player_get_attribute(player,attr))
+		if physio_stress.attributes[attr] then
+			xpfw.player_reset_single_attribute(player,attr)
+			physio_stress.hud_update(player,attr,xpfw.player_get_attribute(player,attr))
+		end
 	end
 end)
 
@@ -53,11 +55,15 @@ minetest.register_on_joinplayer(function(player)
 		ps[attr] = 0
 	end
 	for i,attr in ipairs(physio_stress.ingestion) do
-		xpfw.player_reset_single_attribute(player,attr)
-		physio_stress.hud_init(player,attr)
+		if physio_stress.attributes[attr] then
+			xpfw.player_reset_single_attribute(player,attr)
+			physio_stress.hud_init(player,attr)
+		end
 	end
-	xpfw.player_reset_single_attribute(player,"exhaustion")
-	physio_stress.hud_init(player,"exhaustion")
+	if physio_stress.attributes.exhaustion then
+		xpfw.player_reset_single_attribute(player,"exhaustion")
+		physio_stress.hud_init(player,"exhaustion")
+	end
 end)
 
 minetest.register_on_dignode(function(pos,oldnode,player)

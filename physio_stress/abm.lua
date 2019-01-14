@@ -5,6 +5,7 @@ minetest.register_globalstep(function(dtime)
 --		print("ping")
 		local starttime=os.clock()
 		physio_stress.dt=0
+		physio_stress.dtime=math.random(3,7)/10 -- random time between global steps
 		local players = minetest.get_connected_players()
 		for i=1, #players do
 			local player=players[i]
@@ -76,7 +77,14 @@ minetest.register_globalstep(function(dtime)
 						if dref==nil then dref=1 end
 						dsat=dsat+math.max(0,(xpfw.player_get_attribute(player,attr)-ps[attr])/(dref))
 					end
-					
+					if physio_stress.attributes.exhaustion then
+						local dref=ps[st.."_exhaustion"]
+						if dref==nil then
+							dref=physio_stress.default_player[st.."_exhaustion"]
+						end
+						if dref==nil then dref=1 end
+						dsat=dsat+math.max(0,(xpfw.player_get_attribute(player,"exhaustion"))/(dref))
+					end
 					-- small corrections due to hardness of dug nodes (by group stage): harder stones need more energy
 					local dref=ps[st.."_dug"]
 					if dref==nil then
@@ -94,6 +102,9 @@ minetest.register_globalstep(function(dtime)
 					else
 					-- otherwise hitpoints are reduced
 						minetest.chat_send_player(name,"Beware of "..st)
+						if (xpfw.player_get_attribute(player,st)>1) then
+							xpfw.player_set_attribute(player,st,1)
+						end
 						local hp=player:get_hp()-0.5
 						player:set_hp(hp)
 					end
