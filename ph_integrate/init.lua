@@ -18,6 +18,10 @@ local cf={["farming:grain_coffee_cup_hot"]={drink_hp=10},
 }
 for i,def in pairs(cf) do
 	if minetest.registered_items[i]~=nil then
-		minetest.override_item(i,def)
+		local tgroup=minetest.registered_items[i].groups
+		if tgroup.drinkable == nil then
+			tgroup["drinkable"]=def.drink_hp
+		end
+		minetest.override_item(i,tgroup)
 	end
 end

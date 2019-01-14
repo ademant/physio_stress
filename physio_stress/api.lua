@@ -10,10 +10,7 @@ end
 function physio_stress.eat(hp_change, replace_with_item, itemstack, user, pointed_thing)
 	local item = itemstack:get_name()
 	local def = minetest.registered_items[item]
-	local thirst_change = 0
-	if def.drink_hp then
-		thirst_change=tonumber(def.drink_hp) or 0
-	end
+	local thirst_change=minetest.get_item_group(item,"drinkable")
 	if not def then
 		def = {}
 		if type(hp_change) ~= "number" then
