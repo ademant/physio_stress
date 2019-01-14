@@ -1,6 +1,11 @@
 -- check, which submodule should be enabled
 for i,attr in ipairs({"exhaustion","saturation","thirst","sunburn","nyctophoby"}) do
-	physio_stress.attributes[attr]=minetest.settings:get("physio_stress."..attr) or false
+	physio_stress.attributes[attr]=(minetest.settings:get("physio_stress."..attr)=="true") or false
+	local is_status=" is enabled"
+	if physio_stress.attributes[attr] == false then
+		is_status = " is disabled"
+	end
+	print(attr..is_status)
 end
 
 physio_stress.dtime=tonumber(minetest.settings:get("physio_stress.dtime")) or 1
@@ -14,9 +19,25 @@ physio_stress.exhausted_dig={}
 physio_stress.st_coeff_names={"walked","swam","dug","build","base","craft"}
 physio_stress.action_names={"walked","swam","dug","build","craft"}
 physio_stress.dig_groups={"cracky","crumbly","snappy","choppy"}
-physio_stress.phobies={"sunburn","nyctophoby"}
-physio_stress.ingestion={"saturation","thirst"}
+physio_stress.phobies={}
+physio_stress.ingestion={}
 physio_stress.player_fields={"sunburn_armor_dmaxlight","sunburn_maxlight","sunburn_delay","sunburn_diff","nyctophoby_diff","sunburn_hp","nyctophoby_delay","nyctophoby_hp","sunburn_armor","nyctophoby_armor","nyctophoby_minlight"}
+
+for i,attr in ipairs({"sunburn","nyctophoby"}) do
+	if physio_stress.attributes[attr]~=nil then
+		if physio_stress.attributes[attr] == true then
+			table.insert(physio_stress.phobies,attr)
+		end
+	end
+end
+for i,attr in ipairs({"saturation","thirst"}) do
+	if physio_stress.attributes[attr]~=nil then
+		if physio_stress.attributes[attr] == true then
+		
+			table.insert(physio_stress.ingestion,attr)
+		end
+	end
+end
 
 -- check for global variables, stored in mod_storage
 for i,attr in ipairs({"playerlist"}) do
@@ -33,7 +54,6 @@ physio_stress.default_player={}
 for i,attr in ipairs(physio_stress.player_fields) do
 	physio_stress.default_player[attr]=tonumber(minetest.settings:get("physio_stress."..attr)) or 1
 end
-print(dump2(physio_stress.default_player))
 for i,attr in ipairs(physio_stress.st_coeff_names) do
 	for j,st in ipairs(physio_stress.ingestion) do 
 		local sat_coeff = tonumber(minetest.settings:get("physio_stress."..st.."_"..attr)) or 100

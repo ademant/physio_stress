@@ -12,9 +12,6 @@ minetest.register_globalstep(function(dtime)
 			local ps=physio_stress.player[name]
 			local act_pos=player:get_pos()
 			local act_light=minetest.get_node_light(act_pos)
---			print(dump2(act_pos))
---			print(act_light)
---			print(dump2(ps))
 			local player_armor=0
 			if armor ~= nil then -- fail back to check if 3d_armor is used
 				local player_armor=armor.def[name].count
@@ -22,69 +19,9 @@ minetest.register_globalstep(function(dtime)
 			local act_node=minetest.get_node(act_pos)
 			
 			--sunburn/nyctophoby
-			if act_light ~= nil then
-				local player_meanlight=xpfw.player_get_attribute(player,"meanlight")
-				if act_light > player_meanlight then
-					-- act light bigger than player meanlight: check for sunburn
-					if (not ps.sunburn_protect) and (physio_stress.attributes.sunburn) then
-						local sudiff=ps.sunburn_diff
-						local sumax=ps.sunburn_maxlight
-						if player_armor>0 then
-							sudiff=sudiff/ps.sunburn_armor
-							sumax=sumax+ps.sunburn_armor_dmaxlight
-						end
-						-- sunburn is increased if:
-						-- 1. Difference between actual light level and player mean light level is to high
-						--    simulating the effect when going into full sunlight out of buildings and you can't see enything
-						-- 2. Too high sun level with real sunburn; the threshold is increased by armor
-						if ((act_light-player_meanlight)>sudiff) or (act_light > sumax) then
-							xpfw.player_add_attribute(player,"sunburn",0.5)
---							print("sunburn"..act_light,sudiff,sumax,player_meanlight,player_armor)
-						end
-					end
-					-- regeneratr from nyctophoby
-						xpfw.player_sub_attribute(player,"nyctophoby",1)
-				else
-					-- act light smaller than player meanlight: check for nyctophoby
-					if (not ps.nyctophoby_protect) and (physio_stress.attributes.nyctophoby) then
-						-- under water there is no light, so find the nearest air and get this light level
-						local node=minetest.get_node(act_pos)
-						if node.name == "water" then
-							local bair=true
-							local dist=5
-							while bair do
-								node=minetest.find_node_near(act_pos,dist,"air")
-								if node==nil then
-									dist=math.ceil(1.5*dist)
-								else
-									bair=false
-									act_light=minetest.get_node_light(node)
-								end
-								if dist>50 then bair=false end
-							end
-							print("dist"..dist)
-						end
-						if node ~= nil then
-							local nydiff=ps.nyctophoby_diff
-							local nymin=ps.nyctophoby_minlight
-							if player_armor>0 then
-								nydiff=nydiff/ps.nyctophoby_armor
-							end
-							-- nyctophoby is increased by:
-							-- 1. Difference between actual light and players mean light
-							--    simulating the effect when going into buildings from full sunlight
-							-- 2. Too low level (hardcoded)
-							if ((player_meanlight-act_light)>nydiff) or (act_light < nymin) then
---								print("night"..act_light,player_meanlight,nydiff,name,nymin)
-								xpfw.player_add_attribute(player,"nyctophoby",0.5)
-							end
-						end
-					end
-					-- regenerate from sunburn
-						xpfw.player_sub_attribute(player,"sunburn",1)
-				end
-			end
+			
 			for i,attr in ipairs(physio_stress.phobies) do
+				physio_stress.abm[attr](player)
 				if xpfw.player_get_attribute(player,attr)>19 then
 					minetest.chat_send_player(name,"Beware of "..attr)
 					player:set_hp( player:get_hp() - ps[attr.."_hp"] )
@@ -176,20 +113,24 @@ minetest.register_globalstep(function(dtime)
 			end
 			
 			-- heal by saturation
-			local hp=player:get_hp()
-			local sat=tonumber(xpfw.player_get_attribute(player,"saturation"))
-			if hp<20 and sat>hp then
-				xpfw.player_sub_attribute(player,"saturation",2*physio_stress.saturation_recreation)
-				physio_stress.hud_update(player,"saturation",xpfw.player_get_attribute(player,"saturation"))
-				hp=hp+physio_stress.saturation_recreation
-				player:set_hp(hp)
+			if physio_stress.attributes.saturation then
+				local hp=player:get_hp()
+				local sat=tonumber(xpfw.player_get_attribute(player,"saturation"))
+				if hp<20 and sat>hp then
+					xpfw.player_sub_attribute(player,"saturation",2*physio_stress.saturation_recreation)
+					physio_stress.hud_update(player,"saturation",xpfw.player_get_attribute(player,"saturation"))
+					hp=hp+physio_stress.saturation_recreation
+					player:set_hp(hp)
+				end
 			end
 			
 			-- thirst recreation in water
-			if minetest.get_item_group(act_node.name,"water")>0 then
-				if xpfw.player_get_attribute(player,"thirst")<physio_stress.thirstmax then
-					xpfw.player_add_attribute(player,"thirst",2)
-					physio_stress.hud_update(player,"thirst",xpfw.player_get_attribute(player,"thirst"))
+			if physio_stress.attributes.thirst then
+				if minetest.get_item_group(act_node.name,"water")>0 then
+					if xpfw.player_get_attribute(player,"thirst")<physio_stress.thirstmax then
+						xpfw.player_add_attribute(player,"thirst",2)
+						physio_stress.hud_update(player,"thirst",xpfw.player_get_attribute(player,"thirst"))
+					end
 				end
 			end
 		end

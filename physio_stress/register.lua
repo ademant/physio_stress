@@ -14,9 +14,7 @@ end)
 
 minetest.register_on_respawnplayer(function(player)
 	local playername = player:get_player_name()
---	print("Resetting for "..playername)
 	for i,attr in ipairs(physio_stress.ingestion) do
---		print("Resetting "..attr.." for player "..playername)
 		xpfw.player_reset_single_attribute(player,attr)
 		physio_stress.hud_update(player,attr,xpfw.player_get_attribute(player,attr))
 	end
@@ -31,13 +29,11 @@ minetest.register_on_joinplayer(function(player)
 		else
 			physio_stress.playerlist=playername
 		end
---		print(physio_stress.playerlist)
 	end
 	if physio_stress.player[playername] == nil then
 		physio_stress.player[playername]=table.copy(physio_stress.default_player)
 	else
 		local ps=physio_stress.player[playername]
-		print(dump2(ps))
 		for i,attr in ipairs(physio_stress.player_fields) do
 			if ps[attr] == nil then
 				ps[attr]=minetest.settings:get("physio_stress."..attr) or 1

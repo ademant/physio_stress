@@ -90,3 +90,98 @@ function physio_stress.player_save(playername)
 		end
 	end
 end
+
+physio_stress.abm={}
+
+function physio_stress.abm.sunburn(player)
+	if physio_stress.attributes.sunburn == false then
+		return
+	end
+	local name = player:get_player_name()
+	local ps=physio_stress.player[name]
+	
+	if ps.sunburn_protect then
+		return
+	end
+	local act_pos=player:get_pos()
+	local act_light=minetest.get_node_light(act_pos)
+	local player_armor=0
+	if armor ~= nil then -- fail back to check if 3d_armor is used
+		local player_armor=armor.def[name].count
+	end
+	local act_node=minetest.get_node(act_pos)
+	local player_meanlight=xpfw.player_get_attribute(player,"meanlight")
+	if act_light > player_meanlight then
+		-- act light bigger than player meanlight: check for sunburn
+		local sudiff=ps.sunburn_diff
+		local sumax=ps.sunburn_maxlight
+		if player_armor>0 then
+			sudiff=sudiff/ps.sunburn_armor
+			sumax=sumax+ps.sunburn_armor_dmaxlight
+		end
+		-- sunburn is increased if:
+		-- 1. Difference between actual light level and player mean light level is to high
+		--    simulating the effect when going into full sunlight out of buildings and you can't see enything
+		-- 2. Too high sun level with real sunburn; the threshold is increased by armor
+		if ((act_light-player_meanlight)>sudiff) or (act_light > sumax) then
+			xpfw.player_add_attribute(player,"sunburn",0.5)
+--			print("sunburn"..act_light,sudiff,sumax,player_meanlight,player_armor)
+		end
+	else
+		xpfw.player_sub_attribute(player,"sunburn",1)
+	end
+end
+
+function physio_stress.abm.nyctophopy(player)
+	if physio_stress.attributes.nyctophopy == false then
+		return
+	end
+	local name = player:get_player_name()
+	local ps=physio_stress.player[name]
+	
+	if ps.nyctophopy_protect then
+		return
+	end
+	local act_pos=player:get_pos()
+	local act_light=minetest.get_node_light(act_pos)
+	local player_armor=0
+	if armor ~= nil then -- fail back to check if 3d_armor is used
+		local player_armor=armor.def[name].count
+	end
+	local player_meanlight=xpfw.player_get_attribute(player,"meanlight")
+	if act_light < player_meanlight then
+		-- under water there is no light, so find the nearest air and get this light level
+		local node=minetest.get_node(act_pos)
+		if node.name == "water" then
+			local bair=true
+			local dist=5
+			while bair do
+				node=minetest.find_node_near(act_pos,dist,"air")
+				if node==nil then
+					dist=math.ceil(1.5*dist)
+				else
+					bair=false
+					act_light=minetest.get_node_light(node)
+				end
+				if dist>50 then bair=false end
+			end
+		end
+		if node ~= nil then
+			local nydiff=ps.nyctophoby_diff
+			local nymin=ps.nyctophoby_minlight
+			if player_armor>0 then
+				nydiff=nydiff/ps.nyctophoby_armor
+			end
+			-- nyctophoby is increased by:
+			-- 1. Difference between actual light and players mean light
+			--    simulating the effect when going into buildings from full sunlight
+			-- 2. Too low level (hardcoded)
+			if ((player_meanlight-act_light)>nydiff) or (act_light < nymin) then
+--				print("night"..act_light,player_meanlight,nydiff,name,nymin)
+				xpfw.player_add_attribute(player,"nyctophoby",0.5)
+			end
+		end
+	else
+		xpfw.player_sub_attribute(player,"nyctophoby",1)
+	end
+end
