@@ -76,6 +76,7 @@ minetest.register_globalstep(function(dtime)
 							dref=physio_stress.default_player[st.."_"..attr]
 						end
 						if dref==nil then dref=1 end
+						print(st.." "..attr.." "..math.max(0,(xpfw.player_get_attribute(player,attr)-ps[attr])/(dref)))
 						dsat=dsat+math.max(0,(xpfw.player_get_attribute(player,attr)-ps[attr])/(dref))
 					end
 					if physio_stress.attributes.exhaustion then
