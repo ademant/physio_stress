@@ -142,7 +142,7 @@ function physio_stress.abm.sunburn(player)
 	end
 end
 
-function physio_stress.abm.nyctophopy(player)
+function physio_stress.abm.nyctophoby(player)
 	if physio_stress.attributes.nyctophopy == false then
 		return
 	end

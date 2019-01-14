@@ -97,11 +97,10 @@ end
 
 
 -- initialize exhaustion
-if physio_stress.attribute["exhaustion"] then
+if physio_stress.attributes["exhaustion"] then
 	local attr_def={min=0,max=20,default=0,hud=1,
 		moving_average_factor=tonumber(minetest.settings:get("physio_stress.exhaustion_mean_weight")) or 50,
 		recreation_factor=tonumber(minetest.settings:get("physio_stress.exhaustion_recreation")) or 10,
 		}
 	xpfw.register_attribute("exhaustion",attr_def)
-	end
 end
