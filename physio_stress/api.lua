@@ -112,12 +112,14 @@ function physio_stress.abm.sunburn(player)
 	end
 	local act_pos=player:get_pos()
 	local act_light=minetest.get_node_light(act_pos)
+	if act_light == nil then return end
 	local player_armor=0
 	if armor ~= nil then -- fail back to check if 3d_armor is used
 		local player_armor=armor.def[name].count
 	end
 	local act_node=minetest.get_node(act_pos)
 	local player_meanlight=xpfw.player_get_attribute(player,"meanlight")
+	if player_meanlight == nil then return end
 	if act_light > player_meanlight then
 		-- act light bigger than player meanlight: check for sunburn
 		local sudiff=ps.sunburn_diff
