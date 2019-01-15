@@ -24,7 +24,7 @@ function physio_stress.eat(hp_change, replace_with_item, itemstack, user, pointe
 			replace=replace_with_item,
 			poisen = 0,
 			healing = 0,
-			sound="hbhunger_eat_generic",}
+			sound="eat_generic",}
 	end
 	local func = physio_stress.item_eat(def.saturation, def.replace, def.poisen, def.healing, thirst_change,def.sound)
 	return func(itemstack, user, pointed_thing)

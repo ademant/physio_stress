@@ -1,6 +1,7 @@
 
 physio_stress = {}
-physio_stress.path = minetest.get_modpath("physio_stress")
+physio_stress.intprefix="physio_stress"
+physio_stress.path = minetest.get_modpath(physio_stress.intprefix)
 physio_stress.modname=minetest.get_current_modname()
 physio_stress.mod_storage=minetest.get_mod_storage()
 physio_stress.attributes={}

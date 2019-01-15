@@ -19,20 +19,20 @@ physio_stress.nyctophoby_minlight (Min light without nyctophoby) float 1
 physio_stress.saturation_max (Max. saturation value) int 20 10 50
 physio_stress.thirst_max (Max. thirst value) int 20 10 50
 physio_stress.saturation_recreation (Heal by saturation per dtime) float 1
-physio_stress.saturation_base (Base consumption of eating per time) int 2000 100 3600
+physio_stress.saturation_playtime (Base consumption of eating per time) int 2000 100 3600
 physio_stress.saturation_walked (One Consumption per walked distance) int 200 10 3600
 physio_stress.saturation_swam (One Consumption per swam distance) int 180 10 3600
 physio_stress.saturation_dug (One Consumption per dug blocks) int 50 5 3600
 physio_stress.saturation_build (One Consumption per build block) int 45 5 3600
 physio_stress.saturation_craft (One Consumption per crafted item) int 75 5 3600
-physio_stress.saturation_exhaustion (One Consumption per level of exhaustion) int 100 5 3600
-physio_stress.thirst_base (Base thirst consumption of eating per time) int 1300 100 3600
+physio_stress.saturation_exhaustion (One Consumption per level of exhaustion) int 5000 5 36000
+physio_stress.thirst_playtime (Base thirst consumption of eating per time) int 1300 100 3600
 physio_stress.thirst_walked (One Consumption thirst per walked distance) int 120 10 3600
 physio_stress.thirst_swam (One Consumption thirst per swam distance) int 90 10 3600
 physio_stress.thirst_dug (One Consumption thirst per dug blocks) int 40 5 3600
 physio_stress.thirst_build (One Consumption thirst per build block) int 35 5 3600
 physio_stress.thirst_craft (One Consumption per crafted item) int 55 5 3600
-physio_stress.thirst_exhaustion (One Consumption per level of exhaustion) int 100 5 3600
+physio_stress.thirst_exhaustion (One Consumption per level of exhaustion) int 5000 5 36000
 physio_stress.dig_snappy (Correction for digging snappy nodes) float 0.25
 physio_stress.dig_cracky (Correction for digging cracky nodes) float 1
 physio_stress.dig_crumbly (Correction for digging crumbly nodes) float 0.5

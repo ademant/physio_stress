@@ -76,7 +76,7 @@ minetest.register_globalstep(function(dtime)
 							dref=physio_stress.default_player[st.."_"..attr]
 						end
 						if dref==nil then dref=1 end
-						print(st.." "..attr.." "..math.max(0,(xpfw.player_get_attribute(player,attr)-ps[attr])/(dref)))
+--						print(st.." "..attr.." "..math.max(0,(xpfw.player_get_attribute(player,attr)-ps[attr])/(dref)).." dref "..dref)
 						dsat=dsat+math.max(0,(xpfw.player_get_attribute(player,attr)-ps[attr])/(dref))
 					end
 					if physio_stress.attributes.exhaustion then
@@ -85,7 +85,8 @@ minetest.register_globalstep(function(dtime)
 							dref=physio_stress.default_player[st.."_exhaustion"]
 						end
 						if dref==nil then dref=1 end
-						dsat=dsat+math.max(0,(xpfw.player_get_attribute(player,"exhaustion"))/(dref))
+--						print(st.." exhaustion "..math.max(0,(xpfw.player_get_attribute(player,"exhaustion")/dtime)/(dref)).." dref "..dref)
+						dsat=dsat+math.max(0,(xpfw.player_get_attribute(player,"exhaustion")/dtime)/(dref))
 					end
 					-- small corrections due to hardness of dug nodes (by group stage): harder stones need more energy
 					local dref=ps[st.."_dug"]
@@ -97,6 +98,7 @@ minetest.register_globalstep(function(dtime)
 						dsat=dsat+math.max(0,(ps[attr]*correction)/(3*dref))
 					end
 					-- if player has enough saturation/thirst, this is reduced
+--					print(st.." "..dsat)
 					if xpfw.player_get_attribute(player,st)>dsat then
 						xpfw.player_sub_attribute(player,st,dsat)
 						physio_stress.hud_update(player,st,xpfw.player_get_attribute(player,st))
@@ -114,7 +116,7 @@ minetest.register_globalstep(function(dtime)
 			end
 			
 			-- actuall stats are copied
-			for i,attr in ipairs(physio_stress.action_names) do
+			for i,attr in ipairs(physio_stress.st_coeff_names) do
 				local patt=xpfw.player_get_attribute(player,attr)
 				if patt ~= nil then
 					ps[attr]=patt
