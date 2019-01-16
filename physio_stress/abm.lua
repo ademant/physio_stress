@@ -22,7 +22,6 @@ minetest.register_globalstep(function(dtime)
 			--sunburn/nyctophoby
 			
 			for i,attr in ipairs(physio_stress.phobies) do
-				print(attr)
 				physio_stress.abm[attr](player)
 				if xpfw.player_get_attribute(player,attr)>19 then
 					minetest.chat_send_player(name,"Beware of "..attr)
