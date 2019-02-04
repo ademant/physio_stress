@@ -26,7 +26,7 @@ minetest.register_globalstep(function(dtime)
 				if xpfw.player_get_attribute(player,attr)>19 then
 					minetest.chat_send_player(name,"Beware of "..attr)
 					player:set_hp( player:get_hp() - ps[attr.."_hp"] )
-					xpfw.player_sub_attribute(player,attr,1)
+					xpfw.player_sub_attribute(player,attr,2)
 				end
 				if ps[attr.."_protect"] then
 					ps[attr.."_delay"]=ps[attr.."_delay"]-dtime

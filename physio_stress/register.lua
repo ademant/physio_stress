@@ -56,7 +56,10 @@ minetest.register_on_joinplayer(function(player)
 	end
 	for i,attr in ipairs(physio_stress.ingestion) do
 		if physio_stress.attributes[attr] then
-			xpfw.player_reset_single_attribute(player,attr)
+			if xpfw.player_get_attribute(player,attr)<physio_stress.ingestion_rejoin then
+				xpfw.player_set_attribute(player,attr,physio_stress.ingestion_rejoin)
+			end
+--			xpfw.player_reset_single_attribute(player,attr)
 			physio_stress.hud_init(player,attr)
 		end
 	end

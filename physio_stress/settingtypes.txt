@@ -5,15 +5,16 @@ physio_stress.thirst (Enables thirst) bool true
 physio_stress.sunburn (Enables sunburn) bool true
 physio_stress.nyctophoby (Enables angst before darkness) bool false
 physio_stress.prefix (Physio prefix for metadata) string "physio"
+physio_stress.ingestion_rejoin (Increase ingestion value if lower this value) int 3 0 20
 physio_stress.sunburn_delay (Sunburn delay for start hurting) int 360 1 1000
 physio_stress.sunburn_diff (Sunburn threshold for damage) int 4 1 14
-physio_stress.sunburn_armor (Sunburn armor protection) float 0.5
+physio_stress.sunburn_armor (Sunburn armor protection) float 0.65
 physio_stress.sunburn_hp (Sunburn health points damage) float 0.5 
 physio_stress.sunburn_maxlight (Max light without sunburn) float 13
 physio_stress.sunburn_armor_dmaxlight (armor enhancement for maxlight) float 1
 physio_stress.nyctophyby_delay (Nyctophoby delay for start hurting) int 360 1 1000
 physio_stress.nyctophoby_diff (Nyctophoby threshold for damage) int 8 1 14
-physio_stress.nyctophoby_armor (Nyctophoby armor protection) float 0.5 
+physio_stress.nyctophoby_armor (Nyctophoby armor protection) float 0.65 
 physio_stress.nyctophoby_hp (Nyctophoby health points damage) float 0.5 
 physio_stress.nyctophoby_minlight (Min light without nyctophoby) float 1
 physio_stress.saturation_max (Max. saturation value) int 20 10 50
