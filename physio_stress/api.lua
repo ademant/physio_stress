@@ -65,6 +65,15 @@ function physio_stress.item_eat(hunger_change, replace_with_item, poisen, heal, 
 					end
 				end
 			end
+			
+			-- recreation / exhaustion
+			-- while eating/drinking recreates from exhaustion
+			if physio_stress.attributes["exhaustion"] then -- is exhaustion enabled?
+				local th = xpfw.player_get_attribute(user,"exhaustion")
+				if th > 5 then
+					xpfw.player_sub_attribute(user,"exhaustion",2)
+				end
+			end
 			-- Healing
 			-- Poison
 

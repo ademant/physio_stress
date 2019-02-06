@@ -101,14 +101,14 @@ minetest.register_globalstep(function(dtime)
 					if xpfw.player_get_attribute(player,st)>dsat then
 						xpfw.player_sub_attribute(player,st,dsat)
 						physio_stress.hud_update(player,st,xpfw.player_get_attribute(player,st))
-
 					else
 					-- otherwise hitpoints are reduced
 						minetest.chat_send_player(name,"Beware of "..st)
-						if (xpfw.player_get_attribute(player,st)>1) then
+						if (xpfw.player_get_attribute(player,st)<1) then
 							xpfw.player_set_attribute(player,st,1)
+							physio_stress.hud_update(player,st,xpfw.player_get_attribute(player,st))
 						end
-						local hp=player:get_hp()-0.5
+						local hp=player:get_hp()-dsat/2
 						player:set_hp(hp)
 					end
 				end
