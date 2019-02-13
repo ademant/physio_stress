@@ -14,8 +14,11 @@ if armor == nil then
 end
 
 physio_stress.dtime=tonumber(minetest.settings:get(physio_stress.intprefix..".dtime")) or 1
+physio_stress.dtime_heal=tonumber(minetest.settings:get(physio_stress.intprefix..".dtime_heal")) or 1
 physio_stress.dt=0
+physio_stress.dt_heal=0
 physio_stress.saturationmax=tonumber(minetest.settings:get(physio_stress.intprefix..".saturation_max")) or 20
+physio_stress.saturation_minhealing=tonumber(minetest.settings:get(physio_stress.intprefix..".saturation_minhealing")) or 3
 physio_stress.thirstmax=tonumber(minetest.settings:get(physio_stress.intprefix..".thirst_max")) or 20
 physio_stress.saturation_recreation=tonumber(minetest.settings:get(physio_stress.intprefix..".saturation_recreation")) or 0.5
 physio_stress.ingestion_rejoin=tonumber(minetest.settings:get(physio_stress.intprefix..".ingestion_rejoin")) or 3

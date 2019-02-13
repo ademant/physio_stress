@@ -1,4 +1,5 @@
-physio_stress.dtime (Time diff when to execute the abm) float 1 
+physio_stress.dtime (Time diff when to execute the abm) float 0.5 
+physio_stress.dtime_heal (Time diff when to execute the hp_abm) float 1 
 physio_stress.exhaustion (Enables exhaustion) bool true
 physio_stress.saturation (Enables hunger) bool true
 physio_stress.thirst (Enables thirst) bool true
@@ -27,6 +28,7 @@ physio_stress.saturation_dug (One Consumption per dug blocks) int 50 5 3600
 physio_stress.saturation_build (One Consumption per build block) int 45 5 3600
 physio_stress.saturation_craft (One Consumption per crafted item) int 75 5 3600
 physio_stress.saturation_exhaustion (One Consumption per level of exhaustion) int 5000 5 36000
+physio_stress.saturation_minhealing (Min saturation for recreate hp) int 3 2 10
 physio_stress.thirst_playtime (Base thirst consumption of eating per time) int 1300 100 3600
 physio_stress.thirst_walked (One Consumption thirst per walked distance) int 120 10 3600
 physio_stress.thirst_swam (One Consumption thirst per swam distance) int 90 10 3600

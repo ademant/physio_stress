@@ -17,7 +17,7 @@ playereffects.register_effect_type("slow_build", "Slow build", "physio_stress_ex
 		physio_stress.exhausted_build[player:get_player_name()]=nil
 	end
 )
-playereffects.register_effect_type("exhausted", "Exhausted", "physio_stress_exhaust_16", {"exhaust"}, 
+playereffects.register_effect_type("exhausted", "Exhausted", "physio_stress_exhaust_16.png", {"exhaust"}, 
 	function(player)
 		physio_stress.exhausted_build[player:get_player_name()]=3
 		physio_stress.exhausted_dig[player:get_player_name()]=3
@@ -33,7 +33,7 @@ playereffects.register_effect_type("exhausted", "Exhausted", "physio_stress_exha
 
 -- based on examples.lua out of playereffects mod
 -- Slows the user down
-playereffects.register_effect_type("low_speed", "Low speed", "physio_stress_exhaust_16", {"speed"}, 
+playereffects.register_effect_type("low_speed", "Low speed", "physio_stress_exhaust_16.png", {"speed"}, 
 	function(player)
 		player:set_physics_override(0.25,nil,nil)
 	end,

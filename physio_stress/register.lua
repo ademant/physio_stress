@@ -10,6 +10,14 @@ end)
 minetest.register_on_leaveplayer(function(player)
 	local playername = player:get_player_name()
 	physio_stress.player_save(playername)
+	local ps=physio_stress.player[playername]
+	ps["disabled"] = 1
+end)
+
+minetest.register_on_dieplayer(function(player)
+	local playername = player:get_player_name()
+	local ps=physio_stress.player[playername]
+	ps["disabled"] = 1
 end)
 
 minetest.register_on_respawnplayer(function(player)
@@ -66,6 +74,10 @@ minetest.register_on_joinplayer(function(player)
 	if physio_stress.attributes.exhaustion then
 		xpfw.player_reset_single_attribute(player,"exhaustion")
 		physio_stress.hud_init(player,"exhaustion")
+	end
+	
+	if ps["disabled"] ~= nil then
+		ps["disabled"] = nil
 	end
 end)
 
