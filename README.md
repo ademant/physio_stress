@@ -1,6 +1,16 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 # Physio stress modpack
 
+Main Repository:
+
+https://notabug.org/ademant/minetest_physio_stress.git
+
+Mirrors:
+
+https://gitlab.com/ademant/physio_stress.git
+
+https://github.com/ademant/physio_stress.git
+
 ## Short description
 Providing following mods:
 - physio_stress, using xpfs to provide hunger, thirst, exhaustion, sunburn and nyctophoby
