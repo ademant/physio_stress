@@ -1,0 +1,42 @@
+# German Translation for Physio_stress mod.
+# Copyright (C) 2017
+# This file is distributed under the same license as the farming package.
+# Xanthin.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.27\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-02-14 HO:MI+ZONE\n"
+"PO-Revision-Date: 2019-02-14 HO:MI+ZONE\n"
+"Last-Translator: ademant\n"
+"Language-Team: \n"
+"Language: German \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Saturation"
+msgstr "Sättigung"
+
+msgid "Exhaustion"
+msgstr "Erschöpfung"
+
+msgid "Thirst"
+msgstr "Durst"
+
+msgid "protection"
+msgstr "Schutz"
+
+msgid "no sunburn protection"
+msgstr "Kein Schutz vor Sonnenbrand mehr"
+
+msgid "no nyctophoby protection"
+msgstr "Kein Schutz vor der Angst vor Dunkelheit mehr"
+
+msgid "Beware of sunburn"
+msgstr "Nimm Dich vor der Sonne in Acht"
+
+msgid "Beware of nyctophoby"
+msgstr "Vorsicht vor der Dunkelheit"
