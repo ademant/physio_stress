@@ -1,3 +1,5 @@
+local S=physio_stress.intllib
+
 minetest.register_globalstep(function(dtime)
 	physio_stress.dt=physio_stress.dt+dtime
 	physio_stress.dt_heal=physio_stress.dt_heal+dtime
