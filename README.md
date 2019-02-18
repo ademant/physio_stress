@@ -11,6 +11,10 @@ https://gitlab.com/ademant/physio_stress.git
 
 https://github.com/ademant/physio_stress.git
 
+Works only with Minetest >= 5.0
+
+Minetest <= 0.4.17 does not support the mechanism for handling player related meta data.
+
 ## Short description
 Providing following mods:
 - physio_stress, using xpfs to provide hunger, thirst, exhaustion, sunburn and nyctophoby

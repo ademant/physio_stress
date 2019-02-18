@@ -3,6 +3,10 @@
 
 See license.txt for license information.
 
+Works only with Minetest >= 5.0
+
+Minetest <= 0.4.17 does not support the mechanism for handling player related meta data.
+
 ## Short Description
 Physio-Stress is a mod providing following physiological enhancements:
 - Sunburn
